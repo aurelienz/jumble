@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:gravity="center"
+    android:orientation="horizontal" >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:layout_marginTop="30dp"
+        android:text="@string/options"
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/languageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="135dp"
+        android:text="@string/language"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+    <ImageView
+        android:id="@+id/enFlag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="135dp"
+        android:onClick="setEnglish"
+        android:src="@drawable/uk_flag" />
+    <ImageView
+        android:id="@+id/frFlag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="135dp"
+        android:onClick="setFrench"
+        android:src="@drawable/fr_flag" />
+    <ImageView
+        android:id="@+id/buttonBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:onClick="getBack"
+        android:src="@drawable/button_back" />
+    <TextView
+        android:id="@+id/musicText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="240dp"
+        android:text="@string/music"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="250dp"
+        android:gravity="center"
+        android:max="100"
+        android:maxHeight="10dp"
+        android:minWidth="220dp" />
+    <TextView
+        android:id="@+id/resetText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="330dp"
+        android:text="@string/data"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="330dp"
+        android:text="@string/reset"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+</FrameLayout>

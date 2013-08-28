@@ -1,0 +1,49 @@
+Description of the format of the JSON
+
+This file contains an anonymous hash table which contains 3 hash tables:
+- categories
+- words
+- localisations
+
+The table "categories" must have 8 categories.
+Each category has a unique ID (between 1 and 8). The string of each category incorporates:
+- "translations" with the exact name for each language according to the country code
+- "image" which is the image path for the image displayed on the category screen
+- "minscore" which  indicates what is the minimum score required to unlock this level
+
+The table "words" can have have as many words as you want. By default, the language is english and each word is a unique name key for this table.
+To add a word in the JSON, you must indicate:
+- the unique ID of the "category" that it belongs to
+- the image path to display the "image" of the word on the screen. By default, thoses images are in the folder: images/"name_of_the_category"/"word".png
+- the sound path to play the pronounciation of the word when the user uses the hint. By default, thoses sounds must be in the english folder (sound/en/"name_of_the_category"/"word".ogg)
+- the level that the word belongs to. 
+	"1": easy, "2": medium, "3": advanced
+ 	The words are generate randomly by levels. All the words marked as "1" will be generate at the beginning. 
+	When they will all be solved, the words marked as "2" will appear. 
+	At the end, the words marked as "1" will be generate.
+
+The table "localisations" contains for the moment two tables: "NZ" and "FR" ("country_code"). It can contains as many languages as you want.
+Be careful, if you want a complete translation, they must be the same number of words in english than in the language you create.
+Indeed, the code is built to pick a word from the table "words" and then check if a localisation exists. If there is one, the word will appear in the language selected.
+If there isn't, the word will be displayed in english.
+The english word is the name key for the "country code" table. You must indicate:
+- "word" is the translation of the word
+- "sound" is the pronunciation of the word in this language. If there isn't a precise sound path, the sound played will be in english.
+- "level" is the difficulty of the word because a word can have a different difficulty depending on the language.
+If you don't indicate a "word", "sound", "level" field, by default it will be replaced by the english one.
+
+
+Construction of the database (zip file)
+
+The file "words.json" is located in the root and must be called this exact same name.
+
+We recommend the following structure for the database:
+- images
+	> categories: this folder contains the images according to the categories that will be displayed on the category screen
+	>"name_of_the_category" : this folder contains all the images of the words belonging to this category
+		>"word".png
+- sounds
+	>"country_code"
+		>"name_of_the_category" : this folder contains all the sounds of the words belonging to this category
+			>"word".ogg
+However, you can have your own structure but you must be careful to give the exact image and sound paths in the JSON file in the fields "image" and "sound" for the hash tables : "words" and "country_code"

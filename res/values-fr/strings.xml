@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jumble</string>
+    <string name="loading">Chargement...</string>
+    <string name="text_button_play">Jouer</string>
+    <string name="options">Options</string>
+    <string name="action_settings">Réglages</string>
+    <string name="win">Bravo !</string>
+    <string name="win2">Bien joué !</string>
+    <string name="win3">Bien !</string>
+    <string name="start_play">Jouer !</string>
+    <string name="choose_avatar">Choisis ton avatar</string>
+    <string name="name_avatar">Nom</string>
+    <string name="score_total">Score total :</string>
+    <string name="best_score">Meilleur score :</string>
+    <string name="language">Langage </string>
+    <string name="music">Musique</string>
+    <string name="needHint">Besoin d\'aide ?</string>
+    <string name="detailsHint">Appuie sur le bouton avec le haut-parleur pour entendre la prononciation du mot.
+    Attention! Tu perdras 10 points à chaque fois...</string>
+    <string name="reset">Remise à zéro du jeu</string>
+    <string name="data">Données enregistrées</string>
+    <string name="rules">Règles</string>
+    <string name="text_reset_score">Retour au score de départ</string>
+    <string name="scoreBeg">Score de départ : 100 points</string>
+    <string name="score_adv">Si tu résous le mot en moins de 15 secondes et que tu as fait le même nombre de mouvements
+            que le nombre de lettres, tu gagnes 100 points!</string>
+    <string name="score_med">Si tu résous le mot en moins de 30 secondes, tu gagnes 50 points!</string>
+    <string name="score_low">Si tu résous le mot en plus de 30 secondes, tu gagnes 20 points!</string>
+    <string name="scoreHint">Attention! A chaque fois que tu utiliseras l\'aide, tu perdras 10 points...</string>
+    <string name="results">Résultats</string>
+    <string name="unlockLevel">Tu as débloqué un niveau !</string>
+    <string name="detailsLevels">Super! Une nouvelle catégorie est maintenant disponible!</string>
+    <string name="score_animals">La catégorie Animaux est débloquée dès le début du jeu.</string>
+    <string name="score_fruits_vegetables">Tu as besoin de 500 points pour débloquer la catégorie: Fruits et Légumes</string>
+    <string name="score_home">Tu as besoin de 2000 points pour débloquer la catégorie: La maison</string>
+    <string name="score_nature">Tu as besoin de 4000 points pour débloquer la catégorie: Nature</string>
+    <string name="score_colors">Tu as besoin de 6000 points pour débloquer la catégorie: Couleurs</string>
+    <string name="score_clothes">Tu as besoin de 8000 points pour débloquer la catégorie: Vêtements</string>
+    <string name="score_health">Tu as besoin de 12000 points pour débloquer la catégorie: Santé</string>
+    <string name="score_sports">Tu as besoin de 16000 points pour débloquer la catégorie: Sports</string>
+</resources>

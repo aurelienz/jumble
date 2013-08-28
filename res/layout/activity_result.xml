@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_category"
+    android:gravity="center"
+    android:orientation="vertical" >
+    <FrameLayout
+        android:id="@+id/top"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="fill_vertical|fill_horizontal"
+        android:layout_weight="2"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/resultTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="20dp"
+            android:text="@string/results"
+            android:textColor="@android:color/white"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/returnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:onClick="getBack"
+            android:src="@drawable/button_back" />
+        <Button
+            android:id="@+id/reset_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_reset"
+            android:onClick="resetScore"
+            android:padding="15dp"
+            android:text="@string/text_reset_score"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/score_best_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="110dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/best_score"
+            android:textColor="@android:color/white"
+            android:textSize="25sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/score_best"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="110dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="25sp"
+            android:textStyle="italic" />
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="fill_vertical|fill_horizontal"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/levelAnimals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/score_animals"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/levelFruitsVegetables"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/score_fruits_vegetables"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/levelHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="80dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/score_home"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/levelNature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="120dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/score_nature"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/levelColors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="160dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/score_colors"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/levelClothes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="200dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/score_clothes"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/levelHealth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="240dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/score_health"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/levelSports"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="280dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/score_sports"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+    </FrameLayout>
+</LinearLayout>
