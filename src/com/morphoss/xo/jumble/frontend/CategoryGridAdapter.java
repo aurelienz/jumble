@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.frontend;
 
 import java.util.ArrayList;
@@ -22,6 +39,9 @@ import com.morphoss.xo.jumble.models.Category;
 
 public class CategoryGridAdapter extends BaseAdapter {
 
+	/**
+	 * This class is an adapter for the categor gridview
+	 */
 	private Context context;
 	private static ArrayList<Category> categories = null;;
 	private int buttonWidth;
@@ -43,6 +63,9 @@ public class CategoryGridAdapter extends BaseAdapter {
 
 	}
 
+	/**
+	 * This method get the view of a specific category
+	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		LayoutInflater inflater = (LayoutInflater) context
@@ -69,6 +92,11 @@ public class CategoryGridAdapter extends BaseAdapter {
 		return gridView;
 	}
 
+	/**
+	 * This method sets 8 categories on the screen
+	 * 
+	 * @param categories
+	 */
 	public void setCategories(Collection<Category> categories) {
 		this.categories = new ArrayList<Category>();
 		this.categories.addAll(categories);
@@ -102,10 +130,19 @@ public class CategoryGridAdapter extends BaseAdapter {
 		return categories.get(position).getId();
 	}
 
+	/**
+	 * this method gets the current category
+	 * 
+	 * @param position
+	 * @return the category selected
+	 */
 	public static Category getCategory(int position) {
 		return categories.get(position);
 	}
 
+	/**
+	 * This method locks and unlocks levels
+	 */
 	public void lockLevels() {
 		scoreToUnlock = category.getMinScore();
 		Log.d(TAG, "score to unlock level :" + scoreToUnlock);

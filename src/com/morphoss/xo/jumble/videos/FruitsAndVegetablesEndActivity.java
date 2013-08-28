@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.videos;
 
 import java.util.Locale;
@@ -16,6 +33,10 @@ import com.morphoss.xo.jumble.frontend.CategoryScreenActivity;
 
 public class FruitsAndVegetablesEndActivity extends BaseActivity {
 
+	/**
+	 * This class displays the video at the end of the category Fruits and
+	 * Vegetables
+	 */
 	private static final String TAG = "FruitsAndVegetablesEndActivity";
 	public final static String EXTRA_MESSAGE = "com.morphoss.xo.jumble.MESSAGE";
 	private VideoView mVideoView;
@@ -58,6 +79,9 @@ public class FruitsAndVegetablesEndActivity extends BaseActivity {
 		finish();
 	}
 
+	/**
+	 * This method starts the CategoryScreenActivity
+	 */
 	private void startCategoryActivity() {
 		Intent intent = new Intent();
 		intent.setClass(FruitsAndVegetablesEndActivity.this,
@@ -66,6 +90,12 @@ public class FruitsAndVegetablesEndActivity extends BaseActivity {
 		finish();
 	}
 
+	/**
+	 * This methods allows to skip the video and go directly to the
+	 * CategoryScreenActivity
+	 * 
+	 * @param view
+	 */
 	public void Skip_video(View view) {
 		mVideoView.pause();
 		mVideoView.stopPlayback();

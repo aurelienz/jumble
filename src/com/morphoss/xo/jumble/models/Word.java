@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.models;
 
 import java.util.ArrayList;
@@ -19,6 +36,9 @@ import com.morphoss.xo.jumble.frontend.SettingsActivity;
 
 public class Word implements Parcelable {
 
+	/**
+	 * This class sets all the details about the Word type
+	 */
 	public static String TAG = "Word";
 
 	private String nameKey;
@@ -109,6 +129,15 @@ public class Word implements Parcelable {
 		}
 	};
 
+	/**
+	 * This method gets the word and its details like imagepath and soundpath
+	 * from the JSON file
+	 * 
+	 * @param json
+	 * @param categories
+	 * @return
+	 * @throws JSONException
+	 */
 	public static HashMap<String, Word> getWordFromJson(JSONObject json,
 			HashMap<Integer, Category> categories) throws JSONException {
 		Log.d(TAG, "creating ArrayList");
@@ -144,6 +173,11 @@ public class Word implements Parcelable {
 		return this.nameKey + "(" + this.level.toString() + ")";
 	}
 
+	/**
+	 * 
+	 * @param context
+	 * @return the localized word if it exists
+	 */
 	public String getLocalisedWord(Context context) {
 		String cc = SettingsActivity.getLanguageToLoad();
 		Localisation loc = localisations.get(cc);
@@ -152,6 +186,11 @@ public class Word implements Parcelable {
 		return nameKey;
 	}
 
+	/**
+	 * 
+	 * @param context
+	 * @return the localized sound if it exists
+	 */
 	public String getLocalisedSound(Context context) {
 		String cc = SettingsActivity.getLanguageToLoad();
 
@@ -161,6 +200,11 @@ public class Word implements Parcelable {
 		return soundPath;
 	}
 
+	/**
+	 * 
+	 * @param context
+	 * @return the localized level if it exists
+	 */
 	public Difficulty getLocalisedLevel(Context context) {
 		String cc = SettingsActivity.getLanguageToLoad();
 		Localisation loc = localisations.get(cc);
@@ -169,6 +213,10 @@ public class Word implements Parcelable {
 		return level;
 	}
 
+	/**
+	 * 
+	 * @return the localization details
+	 */
 	public HashMap<String, Localisation> getLocalisations() {
 		return localisations;
 	}

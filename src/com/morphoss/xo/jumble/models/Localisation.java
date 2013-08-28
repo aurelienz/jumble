@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.models;
 
 import java.util.ArrayList;
@@ -13,6 +30,9 @@ import android.util.Log;
 
 public class Localisation implements Parcelable {
 
+	/**
+	 * This class sets all the details about localisation
+	 */
 	public static String TAG = "Localisation";
 
 	private String nameKey;
@@ -47,14 +67,31 @@ public class Localisation implements Parcelable {
 		return 0;
 	}
 
+	/**
+	 * This method checks if the word has an other localization than English
+	 * 
+	 * @return
+	 */
 	public boolean hasLocalisedWord() {
 		return this.word != null;
 	}
 
+	/**
+	 * This method checks if the sound of the word has an other localization
+	 * than English
+	 * 
+	 * @return
+	 */
 	public boolean hasLocalisedSound() {
 		return this.soundPath != null;
 	}
 
+	/**
+	 * This method checks if the difficulty of the word has an other
+	 * localization than English
+	 * 
+	 * @return
+	 */
 	public Difficulty hasLocalisedLevel() {
 		return this.level;
 	}
@@ -122,6 +159,14 @@ public class Localisation implements Parcelable {
 		return level;
 	}
 
+	/**
+	 * This method gets all the infomations about localization from the JSON
+	 * file
+	 * 
+	 * @param json
+	 * @return
+	 * @throws JSONException
+	 */
 	public static HashMap<String, ArrayList<Localisation>> getLocalisationFromJson(
 			JSONObject json) throws JSONException {
 		HashMap<String, ArrayList<Localisation>> localisations = new HashMap<String, ArrayList<Localisation>>();

@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.frontend;
 
 import android.content.Intent;
@@ -11,6 +28,9 @@ import com.morphoss.xo.jumble.R;
 
 public class RulesActivity extends BaseActivity {
 
+	/**
+	 * This class explains the rules of the game
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -18,6 +38,9 @@ public class RulesActivity extends BaseActivity {
 
 	}
 
+	/**
+	 * This method starts the background music
+	 */
 	protected void onStart() {
 		super.onStart();
 		myApp.playMusic("generale.ogg");
@@ -37,6 +60,11 @@ public class RulesActivity extends BaseActivity {
 		myApp.pauseMusic();
 	}
 
+	/**
+	 * This method gets back to the MainActivity
+	 * 
+	 * @param v
+	 */
 	public void getBack(View v) {
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);

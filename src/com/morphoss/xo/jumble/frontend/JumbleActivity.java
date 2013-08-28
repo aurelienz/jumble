@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.frontend;
 
 import java.io.File;
@@ -51,6 +68,9 @@ import com.morphoss.xo.jumble.videos.SportsEndActivity;
 
 public class JumbleActivity extends BaseActivity {
 
+	/**
+	 * this class displays the word to guess, the image, the pronunciation
+	 */
 	public static final String CATEGORY_KEY = "category";
 	public static final String TAG = "JumbleActivity";
 	public static final String emptySpace = "";
@@ -112,6 +132,10 @@ public class JumbleActivity extends BaseActivity {
 		}
 	}
 
+	/**
+	 * this method creates the popup window for the hint to listen to the
+	 * pronunciation of the word
+	 */
 	private void initiatePopupWindow() {
 		try {
 
@@ -137,6 +161,9 @@ public class JumbleActivity extends BaseActivity {
 		}
 	}
 
+	/**
+	 * this method closes the popup window
+	 */
 	private OnClickListener cancel_button_click_listener = new OnClickListener() {
 		public void onClick(View v) {
 			pwindo.dismiss();
@@ -144,6 +171,10 @@ public class JumbleActivity extends BaseActivity {
 		}
 	};
 
+	/**
+	 * this method takes 10 points out of the total score each time that the
+	 * hint is used
+	 */
 	private OnClickListener hint_button_click_listener = new OnClickListener() {
 		public void onClick(View v) {
 			playHint(v);
@@ -159,6 +190,13 @@ public class JumbleActivity extends BaseActivity {
 		finish();
 	}
 
+	/**
+	 * This method selects a new word, scrambled it and displays it on the
+	 * screen
+	 * 
+	 * @param word
+	 *            the word to guess
+	 */
 	private void startNewWord(Word word) {
 
 		wordHint = word;
@@ -191,6 +229,11 @@ public class JumbleActivity extends BaseActivity {
 
 	}
 
+	/**
+	 * This method plays the pronunciation of the word
+	 * 
+	 * @param view
+	 */
 	public void playHint(View view) {
 		String sound = wordHint.getLocalisedSound(this);
 		Log.d(TAG, "soundPath: " + sound);
@@ -226,6 +269,12 @@ public class JumbleActivity extends BaseActivity {
 		}
 	}
 
+	/**
+	 * This methods generates the gridview with scrambled letters
+	 * 
+	 * @param word
+	 * @return
+	 */
 	private TileGridAdapter generateWordAdapter(String word) {
 		ArrayList<View> views = new ArrayList<View>();
 
@@ -247,6 +296,12 @@ public class JumbleActivity extends BaseActivity {
 
 	}
 
+	/**
+	 * This method generates blank views in the guess gridview
+	 * 
+	 * @param count
+	 * @return
+	 */
 	private TileGridAdapter generateBlankAdapter(int count) {
 		ArrayList<View> views = new ArrayList<View>();
 
@@ -266,6 +321,13 @@ public class JumbleActivity extends BaseActivity {
 
 	}
 
+	/**
+	 * This method scrambles the word
+	 * 
+	 * @param word
+	 *            to guess
+	 * @return the word scrambled
+	 */
 	public String scramble(String word) {
 
 		char[] wordInCharArray = word.toCharArray();
@@ -329,6 +391,10 @@ public class JumbleActivity extends BaseActivity {
 		}
 	}
 
+	/**
+	 * This class defines the rules of the drag and drop
+	 * 
+	 */
 	class MyDragListener implements OnDragListener {
 		Drawable enterShape = getResources().getDrawable(R.drawable.letter);
 		Drawable normalShape = getResources().getDrawable(R.drawable.bg_letter);
@@ -376,6 +442,13 @@ public class JumbleActivity extends BaseActivity {
 
 		}
 
+		/**
+		 * This method swaps the views when a letter is dropped on the guess
+		 * gridview
+		 * 
+		 * @param a
+		 * @param b
+		 */
 		@SuppressWarnings("deprecation")
 		public void swap(TextView a, TextView b) {
 			Drawable enterShape = getResources().getDrawable(R.drawable.letter);
@@ -402,6 +475,10 @@ public class JumbleActivity extends BaseActivity {
 		}
 	}
 
+	/**
+	 * This method checks that the letters dropped on the guess gridview are in
+	 * the right order
+	 */
 	public void checkAnswer() {
 
 		String cc = SettingsActivity.getLanguageToLoad();
@@ -444,6 +521,13 @@ public class JumbleActivity extends BaseActivity {
 		}
 	}
 
+	/**
+	 * This method inserts the word found in the table words of the database
+	 * 
+	 * @param word
+	 * @param category
+	 * @param cc
+	 */
 	private void insertWord(String word, String category, String cc) {
 
 		ContentValues cv = new ContentValues();
@@ -458,6 +542,11 @@ public class JumbleActivity extends BaseActivity {
 				+ " with cc :" + cc + " in database");
 	}
 
+	/**
+	 * This method gets the time when you start resolving the word
+	 * 
+	 * @return
+	 */
 	public int getTimeStart() {
 		return timeStart;
 	}
@@ -466,6 +555,11 @@ public class JumbleActivity extends BaseActivity {
 		this.timeStart = timeStart;
 	}
 
+	/**
+	 * This methods gets the time when you have found the word
+	 * 
+	 * @return
+	 */
 	public int getTimeEnd() {
 		return timeEnd;
 	}
@@ -474,6 +568,9 @@ public class JumbleActivity extends BaseActivity {
 		this.timeEnd = timeEnd;
 	}
 
+	/**
+	 * this method starts the video at the end of each category
+	 */
 	public void startVideo() {
 		Log.d(TAG,
 				"the id of the current category is : "

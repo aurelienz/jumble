@@ -1,0 +1,48 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+This application is a vocabulary game for children. However, it can also be used by adults who wants to learn basic vocabulary in English or French.
+
+The purpose of this game is to make learn new words in English or French issued from the daily life vocabulary regrouped in 8 categories:
+- Animals
+- Fruits and Vegetables
+- Home
+- Nature
+- Colors
+- Clothes
+- Health
+- Sports
+
+The words will appear by difficulty. That's why, you will have to resolve firstly all the easiest, then the medium ones and finally the advanced words.
+You have the possibility to use a hint by clicking on the bulb ob the top right of the screen. This hint will give you the pronunciation of the word.
+But be careful, each time that you will use it, you will loose 10 points.
+Although, you can listen to this pronunciation on the winning screen. As you have found the word, you wont loose points and can listen to it as many times as you want.
+
+The mission of the game is to help the little lamb to find his way back to the farm. 
+To succeed in this adventure, you have to found more and more words.
+Each time that you finish a whole category, you have the continuation of the story.
+
+Differents options are available such as control the audio, set the language and clear the data from the
+database which means that the solved words are deleted from the database without loosing the unlock levels and the total score.
+Each time that you will reach the exact score to unlock a level, a popup window will appear on the winning screen to inform you about the new level available.
+
+A small video explains how you can play to this game by dragging and dropping the letters. 
+You also have the details of the points you win each time that you find a word.
+
+On the result screen, you can check your current total score, reset it if you want.
+You also have details about the minimum score required to unlock the levels.

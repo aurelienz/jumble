@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.frontend;
 
 import java.util.Locale;
@@ -23,6 +40,9 @@ import com.morphoss.xo.jumble.database.JumbleProvider;
 
 public class SettingsActivity extends BaseActivity {
 
+	/**
+	 * This class sets the settings/options of the game
+	 */
 	private static String languageToLoad = "EN";
 	private SeekBar volumeSeekbar = null;
 	private AudioManager audioManager = null;
@@ -63,6 +83,9 @@ public class SettingsActivity extends BaseActivity {
 		myApp.pauseMusic();
 	}
 
+	/**
+	 * This method resets the words that are in the table words of the database
+	 */
 	private void deleteWords() {
 		resolver = this.getContentResolver();
 		resolver.delete(JumbleProvider.CONTENT_URI_WORDS, null, null);
@@ -74,6 +97,9 @@ public class SettingsActivity extends BaseActivity {
 		myApp.playMusic("generale.ogg");
 	}
 
+	/**
+	 * This methods controls the audio
+	 */
 	private void initControls() {
 		try {
 			volumeSeekbar = (SeekBar) findViewById(R.id.seekBar1);
@@ -115,6 +141,11 @@ public class SettingsActivity extends BaseActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * This method set English as the current language
+	 * 
+	 * @param v
+	 */
 	public void setEnglish(View v) {
 		languageToLoad = "EN"; // english language
 		Locale locale = new Locale(languageToLoad);
@@ -127,6 +158,11 @@ public class SettingsActivity extends BaseActivity {
 		initControls();
 	}
 
+	/**
+	 * This method sets French as the current language
+	 * 
+	 * @param v
+	 */
 	public void setFrench(View v) {
 		languageToLoad = "FR"; // french language
 		Locale locale = new Locale(languageToLoad);
@@ -139,12 +175,21 @@ public class SettingsActivity extends BaseActivity {
 		initControls();
 	}
 
+	/**
+	 * This method gets back to the MainActivity
+	 * 
+	 * @param v
+	 */
 	public void getBack(View v) {
 		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
 		finish();
 	}
 
+	/**
+	 * 
+	 * @return the language selected and that should be used in the app
+	 */
 	public static String getLanguageToLoad() {
 		return languageToLoad;
 	}

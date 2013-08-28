@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.frontend;
 
 import java.io.File;
@@ -29,6 +46,9 @@ import com.morphoss.xo.jumble.database.JumbleScoresTable;
 
 public class WinningActivity extends BaseActivity {
 
+	/**
+	 * This class displays the WinningActivity
+	 */
 	private static final String TAG = "WinningActivity";
 	public final static String EXTRA_MESSAGE = "com.morphoss.xo.jumble.MESSAGE";
 	public static final int RESULT_PLAY_NEXT = 1;
@@ -74,6 +94,10 @@ public class WinningActivity extends BaseActivity {
 
 	}
 
+	/**
+	 * This method sets the number of starts according to the time and the
+	 * number of moves done
+	 */
 	private void setVisibleStars() {
 		if (JumbleActivity.numberMoves == JumbleActivity.correctWord
 				.getLocalisedWord(this).length() && JumbleActivity.time < 15000) {
@@ -103,6 +127,11 @@ public class WinningActivity extends BaseActivity {
 
 	}
 
+	/**
+	 * This method plays the pronunciation of the word
+	 * 
+	 * @param view
+	 */
 	public void playWord(View view) {
 		String sound = JumbleActivity.wordHint.getLocalisedSound(this);
 		if (new File(Constants.storagePath + File.separator
@@ -155,6 +184,9 @@ public class WinningActivity extends BaseActivity {
 		}, 500);
 	}
 
+	/**
+	 * This method creates a popup window when a level is unlocked
+	 */
 	public void PopupWindowLevel() {
 
 		try {
@@ -187,18 +219,34 @@ public class WinningActivity extends BaseActivity {
 		myApp.playMusic("winning.ogg");
 	}
 
+	/**
+	 * This method goes back to the MainActivity
+	 * 
+	 * @param view
+	 */
 	public void Screen_Home(View view) {
 		setResult(RESULT_RETURN_HOME);
 		myApp.stopPlaying();
 		finish();
 	}
 
+	/**
+	 * This method goes back to the CategoryScreenActivity
+	 * 
+	 * @param view
+	 */
 	public void Screen_Category(View view) {
 		setResult(RESULT_RETURN_CATEGORY);
 		myApp.stopPlaying();
 		finish();
 	}
 
+	/**
+	 * This method starts a new word
+	 * 
+	 * @param view
+	 * @throws IOException
+	 */
 	public void Screen_Next(View view) throws IOException {
 
 		setResult(RESULT_PLAY_NEXT);
@@ -208,6 +256,11 @@ public class WinningActivity extends BaseActivity {
 
 	}
 
+	/**
+	 * This methods starts animations on the stars
+	 * 
+	 * @param starId
+	 */
 	private void startStarAnimation(int starId) {
 		ImageView starImage = (ImageView) findViewById(starId);
 		AnimationDrawable starAnimation = (AnimationDrawable) starImage
@@ -215,11 +268,24 @@ public class WinningActivity extends BaseActivity {
 		starAnimation.start();
 	}
 
+	/**
+	 * This method gets the ID of the avatar selected and displays its picture
+	 * on the screen
+	 * 
+	 * @param avatarID
+	 */
 	public void setAvatar(int avatarID) {
 		ImageView imageView = (ImageView) findViewById(R.id.avatar_star);
 		imageView.setImageDrawable(getResources().getDrawable(avatarID));
 	}
 
+	/**
+	 * This method inserts the score in the database
+	 * 
+	 * @param score
+	 * @param category
+	 * @param cc
+	 */
 	private void insertScore(int score, String category, String cc) {
 
 		ContentValues cv = new ContentValues();

@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.frontend;
 
 import java.io.BufferedInputStream;
@@ -31,6 +48,10 @@ import com.morphoss.xo.jumble.videos.StoryActivity;
 
 public class MainActivity extends BaseActivity {
 
+	/**
+	 * This class is the main screen where there are links with most of the
+	 * others activities
+	 */
 	private static final String TAG = "MainActivity";
 	public final static String EXTRA_MESSAGE = "com.morphoss.xo.jumble.MESSAGE";
 	public static int scoreTotal = 100;
@@ -108,6 +129,11 @@ public class MainActivity extends BaseActivity {
 		myApp.playMusic("generale.ogg");
 	}
 
+	/**
+	 * This method plays animations with stars on the screen
+	 * 
+	 * @param starId
+	 */
 	private void startStarAnimation(int starId) {
 		ImageView starImage = (ImageView) findViewById(starId);
 		AnimationDrawable starAnimation = (AnimationDrawable) starImage
@@ -115,6 +141,11 @@ public class MainActivity extends BaseActivity {
 		starAnimation.start();
 	}
 
+	/**
+	 * This method starts the StoryActivity
+	 * 
+	 * @param view
+	 */
 	public void Screen_Play(View view) {
 		Intent intent = new Intent(this, StoryActivity.class);
 		startActivity(intent);
@@ -122,6 +153,11 @@ public class MainActivity extends BaseActivity {
 
 	}
 
+	/**
+	 * This method starts the ResultsActivity
+	 * 
+	 * @param view
+	 */
 	public void Screen_Results(View view) {
 		Intent intent = new Intent(this, ResultsActivity.class);
 		startActivity(intent);
@@ -129,23 +165,42 @@ public class MainActivity extends BaseActivity {
 
 	}
 
+	/**
+	 * This method starts the RulesActivity
+	 * 
+	 * @param view
+	 */
 	public void Screen_Rules(View view) {
 		Intent intent = new Intent(this, RulesVideoActivity.class);
 		startActivity(intent);
 		finish();
 	}
 
+	/**
+	 * This methods starts the SettingsActivity
+	 * 
+	 * @param view
+	 */
 	public void Screen_Settings(View view) {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		startActivity(intent);
 		finish();
 	}
 
+	/**
+	 * This method quits the application
+	 * 
+	 * @param view
+	 */
 	public void Screen_Quit(View view) {
 		finish();
 		myApp.stopPlaying();
 	}
 
+	/**
+	 * This class load the zip file as a background task
+	 * 
+	 */
 	private class InstallDataTask extends AsyncTask<Void, Void, Void> {
 
 		@Override

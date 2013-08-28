@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2011 Morphoss Ltd
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.morphoss.xo.jumble.models;
 
 import java.io.InputStream;
@@ -26,6 +43,9 @@ import com.morphoss.xo.jumble.frontend.SettingsActivity;
 
 public class Category {
 
+	/**
+	 * This class sets all the details about the a Category type
+	 */
 	public static String TAG = "Category";
 
 	private int id;
@@ -35,10 +55,20 @@ public class Category {
 	private String imagePath;
 	private final int minScore;
 
+	/**
+	 * 
+	 * @return the minimum score to unlock the category
+	 */
 	public int getMinScore() {
 		return minScore;
 	}
 
+	/**
+	 * 
+	 * @param context
+	 *            required to work
+	 * @return the drawable of the category
+	 */
 	public BitmapDrawable getImage(Context context) {
 
 		return Util.getImage(context, imagePath);
@@ -67,6 +97,13 @@ public class Category {
 		Log.d(TAG, "Created category : " + this);
 	}
 
+	/**
+	 * This method gets all the categories informations from the JSON file
+	 * 
+	 * @param json
+	 * @return
+	 * @throws JSONException
+	 */
 	public static HashMap<Integer, Category> getCategoriesFromJson(
 			JSONObject json) throws JSONException {
 		Log.d(TAG, "Creating Category List from json: " + json);
@@ -103,6 +140,13 @@ public class Category {
 		return this.id;
 	}
 
+	/**
+	 * This method get the localised name of a word if useful if the country
+	 * code is not EN
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public String getLocalisedName(Context context) {
 		String cc = SettingsActivity.getLanguageToLoad();
 
@@ -121,6 +165,12 @@ public class Category {
 		return words.size();
 	}
 
+	/**
+	 * 
+	 * @param context
+	 *            required to work
+	 * @return the next word of the available ones
+	 */
 	public Word getNextWord(Context context) {
 		ArrayList<Word> words = this.words; // getAllWordsForThisCategory();
 		printWordList("All Available Words", words);
@@ -136,6 +186,13 @@ public class Category {
 
 	}
 
+	/**
+	 * This methods returns the words already found
+	 * 
+	 * @param context
+	 * @param category
+	 * @return
+	 */
 	public static ArrayList<String> getSolvedWordsForCategory(Context context,
 			Category category) {
 		// query contentprovider and return list
@@ -166,6 +223,12 @@ public class Category {
 		return solvedWords;
 	}
 
+	/**
+	 * 
+	 * @param wordList
+	 * @param solvedList
+	 * @return the list of words without the words already solved
+	 */
 	public static ArrayList<Word> removeSolvedFromList(
 			ArrayList<Word> wordList, ArrayList<String> solvedList) {
 
@@ -179,6 +242,12 @@ public class Category {
 		return filteredWords;
 	}
 
+	/**
+	 * This method gets the list of the easiest words still available
+	 * 
+	 * @param context
+	 * @param words
+	 */
 	public static void removeAllButEasiest(Context context,
 			ArrayList<Word> words) {
 		// Whats the easiest?
@@ -200,6 +269,11 @@ public class Category {
 
 	}
 
+	/**
+	 * 
+	 * @param words
+	 * @return a random word from the list of the easiest available words
+	 */
 	public static Word getRandomItem(ArrayList<Word> words) {
 
 		if (words.size() < 1)
@@ -212,6 +286,12 @@ public class Category {
 		return randomWord;
 	}
 
+	/**
+	 * This method creates a log to show on logcat what are the available words
+	 * 
+	 * @param message
+	 * @param list
+	 */
 	public static void printWordList(String message, ArrayList<?> list) {
 		// log message displaying all the elements of list
 		Log.d(TAG, message);
