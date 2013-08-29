@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    name="jumble"
+    basedir="."
+    default="zip" >
+    <property
+        name="jumble"
+        value="${ant.jumble}" />
+    <property
+        name="database"
+        value="words/database" />
+    <property
+        name="assets"
+        value="assets" />
+    <target name="clean" >
+        <delete file="${database}.zip" />
+        <delete dir="${assets}" />
+    </target>
+    <target name="zip" >
+        <zip
+            basedir="${database}"
+            destfile="assets/database.zip"
+            excludes="dont*.*" />
+    </target>
+    <target name="unzip" >
+        <unzip
+            dest="${assets}"
+            src="${database}.zip" />
+    </target>
+</project>
