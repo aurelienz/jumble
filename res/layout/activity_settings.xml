@@ -32,7 +32,6 @@
         android:layout_gravity="top|center"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="135dp"
-        android:onClick="setEnglish"
         android:src="@drawable/uk_flag" />
     <ImageView
         android:id="@+id/frFlag"
@@ -41,7 +40,6 @@
         android:layout_gravity="top|center"
         android:layout_marginLeft="200dp"
         android:layout_marginTop="135dp"
-        android:onClick="setFrench"
         android:src="@drawable/fr_flag" />
     <ImageView
         android:id="@+id/buttonBack"

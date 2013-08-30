@@ -14,7 +14,7 @@
         value="assets" />
     <target name="clean" >
         <delete file="${database}.zip" />
-        <delete dir="${assets}" />
+        <delete dir="assets/database.zip" />
     </target>
     <target name="zip" >
         <zip

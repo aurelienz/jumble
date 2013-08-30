@@ -22,7 +22,7 @@ To add a word in the JSON, you must indicate:
 	When they will all be solved, the words marked as "2" will appear. 
 	At the end, the words marked as "1" will be generate.
 
-The table "localisations" contains for the moment two tables: "NZ" and "FR" ("country_code"). It can contains as many languages as you want.
+The table "localisations" contains for the moment three tables: "en", "en_NZ" and "fr" ("country_code"). It can contains as many languages as you want.
 Be careful, if you want a complete translation, they must be the same number of words in english than in the language you create.
 Indeed, the code is built to pick a word from the table "words" and then check if a localisation exists. If there is one, the word will appear in the language selected.
 If there isn't, the word will be displayed in english.
@@ -30,7 +30,6 @@ The english word is the name key for the "country code" table. You must indicate
 - "word" is the translation of the word
 - "sound" is the pronunciation of the word in this language. If there isn't a precise sound path, the sound played will be in english.
 - "level" is the difficulty of the word because a word can have a different difficulty depending on the language.
-If you don't indicate a "word", "sound", "level" field, by default it will be replaced by the english one.
 
 
 Construction of the database (zip file)
