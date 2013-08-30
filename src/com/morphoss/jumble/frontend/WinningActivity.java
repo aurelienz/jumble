@@ -100,14 +100,14 @@ public class WinningActivity extends BaseActivity {
 	 */
 	private void setVisibleStars() {
 		if (JumbleActivity.numberMoves == JumbleActivity.correctWord
-				.getLocalisedWord(this).length() && JumbleActivity.time < 15000) {
+				.getLocalisedWord().length() && JumbleActivity.time < 15000) {
 			// 3 stars
 			findViewById(R.id.star11).setVisibility(View.VISIBLE);
 			findViewById(R.id.star12).setVisibility(View.VISIBLE);
 			findViewById(R.id.star13).setVisibility(View.VISIBLE);
 			scoreWord = 100;
 		} else if (JumbleActivity.numberMoves == JumbleActivity.correctWord
-				.getLocalisedWord(this).length() || JumbleActivity.time < 30000) {
+				.getLocalisedWord().length() || JumbleActivity.time < 30000) {
 			// 2 stars
 			findViewById(R.id.star11).setVisibility(View.GONE);
 			findViewById(R.id.star12).setVisibility(View.VISIBLE);
@@ -132,19 +132,13 @@ public class WinningActivity extends BaseActivity {
 	 * 
 	 * @param view
 	 */
-	/*public void playWord(View view) {
-		String sound = JumbleActivity.wordHint.getLocalisedSound(this);
-		if (new File(Constants.storagePath + File.separator
-				+ JumbleActivity.wordHint.getSoundPath()).exists()) {
-			myApp.playSoundJumble(Constants.storagePath + File.separator
-					+ sound);
-		} else {
-			Log.d(TAG, "sound file not found for the word: "
-					+ Constants.storagePath + File.separator
-					+ JumbleActivity.wordHint.getSoundPath());
+	public void playWord(View view) {
+		String sound = JumbleActivity.wordHint.getSoundPath();
+		if(sound != null){
+		myApp.playSoundJumble(Constants.storagePath + File.separator + sound);
 		}
 
-	}*/
+	}
 
 	@Override
 	public void onBackPressed() {

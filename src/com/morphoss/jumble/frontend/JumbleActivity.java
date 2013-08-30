@@ -174,7 +174,7 @@ public class JumbleActivity extends BaseActivity {
 	 */
 	private OnClickListener hint_button_click_listener = new OnClickListener() {
 		public void onClick(View v) {
-			//playHint(v);
+			playHint(v);
 			MainActivity.scoreTotal -= 10;
 		}
 	};
@@ -208,9 +208,9 @@ public class JumbleActivity extends BaseActivity {
 		Log.d(TAG, "time start :" + System.currentTimeMillis());
 		correctWord = word;
 		imageAdaptor.setImageDrawable(word.getImage(this));
-		String scrambled = scramble(correctWord.getLocalisedWord(this));
-		int wordLen = correctWord.getLocalisedWord(this).length();
-		Log.d(TAG, "Selected word: " + correctWord.getLocalisedWord(this)
+		String scrambled = scramble(correctWord.getLocalisedWord());
+		int wordLen = word.getLocalisedWord().length();
+		Log.d(TAG, "Selected word: " + correctWord.getLocalisedWord()
 				+ " Scrambled: " + scrambled + " Len: " + wordLen);
 
 		myApp.stopPlaying();
@@ -231,20 +231,13 @@ public class JumbleActivity extends BaseActivity {
 	 * 
 	 * @param view
 	 */
-	/*public void playHint(View view) {
-		String sound = wordHint.getLocalisedSound(this);
+	public void playHint(View view) {
+		String sound = wordHint.getSoundPath();
+		if(sound != null){
 		Log.d(TAG, "soundPath: " + sound);
-		if (new File(Constants.storagePath + File.separator
-				+ wordHint.getSoundPath()).exists()) {
-			myApp.playSoundJumble(Constants.storagePath + File.separator
-					+ sound);
-		} else {
-			Log.d(TAG,
-					"sound file not found for the word: "
-							+ Constants.storagePath + File.separator
-							+ wordHint.getSoundPath());
+		myApp.playSoundJumble(Constants.storagePath + File.separator + sound);
 		}
-	}*/
+	}
 
 	@Override
 	protected void onResume() {
@@ -488,10 +481,10 @@ public class JumbleActivity extends BaseActivity {
 			testWord += v.getText();
 		}
 		Log.d(TAG, "word on guess view: " + testWord);
-		if (gridViewGuess.getChildCount() == correctWord.getLocalisedWord(this)
+		if (gridViewGuess.getChildCount() == correctWord.getLocalisedWord()
 				.length()) {
 			if (guessAdaptor.TestAnswer(testWord,
-					correctWord.getLocalisedWord(this))) {
+					correctWord.getLocalisedWord())) {
 				Log.d(TAG, "good answer");
 				findWord = true;
 				if (findWord = true) {

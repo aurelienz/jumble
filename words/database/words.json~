@@ -1,13 +1,13 @@
 {
   "categories" : {
-   	"1" : { "translations" :{ "en" : "Animals", "FR" : "Animaux" }, "image" : "images/categories/animals.png", "minscore" : "0" },
-    	"2" : {  "translations" :{ "en" : "Fruits and Vegetables", "FR" : "Fruits et Légumes" }, "image" : "images/categories/fruits_vegetables.png", "minscore" : "500"},
-	"3" : {  "translations" :{ "en" : "Home", "FR" : "La maison" }, "image" : "images/categories/home.png", "minscore" : "2000" },
-	"4" : {  "translations" :{ "en" : "Nature", "FR" : "Nature" }, "image" : "images/categories/nature.png", "minscore" : "4000" },
-	"5" : {  "translations" :{ "en" : "Colors", "FR" : "Couleurs" }, "image" : "images/categories/colors.png", "minscore" : "6000" },
-	"6" : {  "translations" :{ "en" : "Clothes", "FR" : "Vêtements" }, "image" : "images/categories/clothes.png", "minscore" : "8000" },
-	"7" : {  "translations" :{ "en" : "Health", "FR" : "Santé" }, "image" : "images/categories/health.png", "minscore" : "12000" },
-	"8" : {  "translations" :{ "en" : "Sports", "FR" : "Sports" }, "image" : "images/categories/sports.png", "minscore" : "15000" }
+   	"1" : { "translations" :{ "en" : "Animals", "fr" : "Animaux" }, "image" : "images/categories/animals.png", "minscore" : "0" },
+    	"2" : {  "translations" :{ "en" : "Fruits and Vegetables", "fr" : "Fruits et Légumes" }, "image" : "images/categories/fruits_vegetables.png", "minscore" : "500"},
+	"3" : {  "translations" :{ "en" : "Home", "fr" : "La maison" }, "image" : "images/categories/home.png", "minscore" : "2000" },
+	"4" : {  "translations" :{ "en" : "Nature", "fr" : "Nature" }, "image" : "images/categories/nature.png", "minscore" : "4000" },
+	"5" : {  "translations" :{ "en" : "Colors", "fr" : "Couleurs" }, "image" : "images/categories/colors.png", "minscore" : "6000" },
+	"6" : {  "translations" :{ "en" : "Clothes", "fr" : "Vêtements" }, "image" : "images/categories/clothes.png", "minscore" : "8000" },
+	"7" : {  "translations" :{ "en" : "Health", "fr" : "Santé" }, "image" : "images/categories/health.png", "minscore" : "12000" },
+	"8" : {  "translations" :{ "en" : "Sports", "fr" : "Sports" }, "image" : "images/categories/sports.png", "minscore" : "15000" }
   },
   "words" : {
       "ant" : { "category" : "1", "image" : "images/animals/ant.png"},

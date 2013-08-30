@@ -92,8 +92,8 @@ public class Localisation implements Parcelable {
 	 * 
 	 * @return
 	 */
-	public Difficulty hasLocalisedLevel() {
-		return this.level;
+	public boolean hasLocalisedLevel() {
+		return this.level != null;
 	}
 
 	@Override

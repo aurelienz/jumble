@@ -71,7 +71,8 @@ public class Category {
 
 		return Util.getImage(context, imagePath);
 	}
-
+	
+	
 	private void populateCache(Context context) {
 		InputStream fis = null;
 	}
@@ -172,18 +173,30 @@ public class Category {
 	public Word getNextWord(Context context) {
 		ArrayList<Word> words = this.words; // getAllWordsForThisCategory();
 		printWordList("All Available Words", words);
+		words = getLocalisedWords(words);
+		printWordList("All Localised Available Words", words);
 		ArrayList<String> solved = getSolvedWordsForCategory(context, this);
 		printWordList("All solved Words", solved);
 		words = removeSolvedFromList(words, solved);
 		printWordList("All Available Words minus solved", words);
 
-		removeAllButEasiest(context, words);
+		removeAllButEasiest(words);
 		printWordList("All but easiest", words);
 		Word word = getRandomItem(words);
 		return word;
 
 	}
 
+	public static ArrayList<Word> getLocalisedWords(ArrayList<Word> list){
+		
+		ArrayList<Word> filteredWords = new ArrayList<Word>();
+		for (Word word : list) {
+			if (word.hasLocalisation())
+				filteredWords.add(word);
+		}
+
+		return filteredWords;
+	}
 	/**
 	 * This methods returns the words already found
 	 * 
@@ -231,7 +244,6 @@ public class Category {
 			ArrayList<Word> wordList, ArrayList<String> solvedList) {
 
 		ArrayList<Word> filteredWords = new ArrayList<Word>();
-
 		for (Word word : wordList) {
 			if (!solvedList.contains(word.getNameKey()))
 				filteredWords.add(word);
@@ -246,21 +258,20 @@ public class Category {
 	 * @param context
 	 * @param words
 	 */
-	public static void removeAllButEasiest(Context context,
-			ArrayList<Word> words) {
+	public static void removeAllButEasiest(ArrayList<Word> words) {
 		// Whats the easiest?
 		Difficulty easiest = Difficulty.ADVANCED;
 
 		for (Word word : words) {
-			if (word.getLocalisedLevel(context).ordinal() < easiest.ordinal()) {
-				easiest = word.getLocalisedLevel(context);
+			if (word.getLevel().ordinal() < easiest.ordinal()) {
+				easiest = word.getLevel();
 
 			}
 		}
 		Iterator<Word> iterator = words.iterator();
 		while (iterator.hasNext()) {
 			Word word1 = iterator.next();
-			if (word1.getLocalisedLevel(context) != easiest) {
+			if (word1.getLevel() != easiest) {
 				iterator.remove();
 			}
 		}

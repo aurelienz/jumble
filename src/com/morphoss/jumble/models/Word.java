@@ -45,10 +45,21 @@ public class Word implements Parcelable {
 	private String imagePath;
 	private HashMap<String, Localisation> localisations = new HashMap<String, Localisation>();
 
+	private Localisation currentLoc = null;
+
 	public BitmapDrawable getImage(Context context) {
 		return Util.getImage(context, imagePath);
 	}
 
+	public Difficulty getLevel(){
+		if(currentLoc == null) setlocalisation();
+		return currentLoc.getLocalisedLevel();
+	}
+	
+	public String getSoundPath(){
+		if(currentLoc == null) setlocalisation();
+		return currentLoc.getLocalisedSoundPath();
+	}
 	private Word(String word, JSONObject data) throws JSONException {
 		this.nameKey = word;
 		this.imagePath = data.getString("image");
@@ -157,45 +168,10 @@ public class Word implements Parcelable {
 	 * @param context
 	 * @return the localized word if it exists
 	 */
-	public String getLocalisedWord(Context context) {
-		
-		String cc = SettingsActivity.getLanguageToLoad();
-		Localisation loc = localisations.get(cc);
-		
-		if (loc != null && loc.hasLocalisedWord())
-			return loc.getLocalisedWord();
-		
-		return nameKey;
-	}
+	public String getLocalisedWord() {
 
-	/**
-	 * 
-	 * @param context
-	 * @return the localized sound if it exists
-	 */
-
-	public String getLocalisedSound(Context context) {
-		
-		String cc = SettingsActivity.getLanguageToLoad();
-		Localisation loc = localisations.get(cc);
-		
-		return loc.getLocalisedSoundPath();
-
-	}
-
-	/**
-	 * 
-	 * @param context
-	 * @return the localized level if it exists
-	 */
-	public Difficulty getLocalisedLevel(Context context) {
-
-		String cc = SettingsActivity.getLanguageToLoad();
-		Localisation loc = localisations.get(cc);
-		
-		return loc.getLocalisedLevel();
-		
-
+		if(currentLoc == null) setlocalisation();
+		return currentLoc.getLocalisedWord();
 	}
 
 	/**
@@ -204,5 +180,15 @@ public class Word implements Parcelable {
 	 */
 	public HashMap<String, Localisation> getLocalisations() {
 		return localisations;
+	}
+	
+	private void setlocalisation(){
+		String cc = SettingsActivity.getLanguageToLoad();
+		currentLoc  = localisations.get(cc);
+		
+	}
+	
+	public boolean hasLocalisation(){
+		return localisations.containsKey(SettingsActivity.getLanguageToLoad());
 	}
 }
