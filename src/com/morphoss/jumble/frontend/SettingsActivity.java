@@ -26,6 +26,7 @@ import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,37 +56,7 @@ public class SettingsActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		setContentView(R.layout.activity_settings);
 		initControls();
-		btnreset = (Button) findViewById(R.id.reset);
-		btnreset.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				deleteWords();
-
-			}
-		});
-		enFlag = (ImageView) findViewById(R.id.enFlag);
-		enFlag.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (v.equals(enFlag)) {
-					setLanguage("en");
-				}
-			}
-		});
-		frFlag = (ImageView) findViewById(R.id.frFlag);
-		frFlag.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (v.equals(frFlag)) {
-					setLanguage("fr");
-				}
-			}
-		});
 
 	}
 
@@ -107,6 +78,7 @@ public class SettingsActivity extends BaseActivity {
 	 * This method resets the words that are in the table words of the database
 	 */
 	private void deleteWords() {
+		Log.d(TAG, "the words have been deleted");
 		resolver = this.getContentResolver();
 		resolver.delete(JumbleProvider.CONTENT_URI_WORDS, null, null);
 	}
@@ -121,6 +93,8 @@ public class SettingsActivity extends BaseActivity {
 	 * This methods controls the audio
 	 */
 	private void initControls() {
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		setContentView(R.layout.activity_settings);
 		try {
 			volumeSeekbar = (SeekBar) findViewById(R.id.seekBar1);
 			audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -146,6 +120,31 @@ public class SettingsActivity extends BaseActivity {
 									AudioManager.STREAM_MUSIC, paramInt, 0);
 						}
 					});
+			btnreset = (Button) findViewById(R.id.reset);
+			btnreset.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					deleteWords();
+
+				}
+			});
+			enFlag = (ImageView) findViewById(R.id.enFlag);
+			enFlag.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					setLanguage("en");
+				}
+			});
+			frFlag = (ImageView) findViewById(R.id.frFlag);
+			frFlag.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					setLanguage("fr");
+				}
+			});
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -166,14 +165,15 @@ public class SettingsActivity extends BaseActivity {
 	 * 
 	 * @param v
 	 */
-	public void setLanguage(String languageToLoad) {
+	public void setLanguage(String language) {
+		languageToLoad = language;
+		Log.d(TAG, "the language chosen is: " + language);
 		Locale locale = new Locale(languageToLoad);
 		Locale.setDefault(locale);
 		Configuration config = new Configuration();
 		config.locale = locale;
-		getBaseContext().getResources().updateConfiguration(config,
-				getBaseContext().getResources().getDisplayMetrics());
-		this.setContentView(R.layout.activity_settings);
+		getResources().updateConfiguration(config,
+				getResources().getDisplayMetrics());
 		initControls();
 	}
 
