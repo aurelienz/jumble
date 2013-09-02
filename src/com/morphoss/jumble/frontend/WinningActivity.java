@@ -31,18 +31,18 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.morphoss.jumble.BaseActivity;
-import com.morphoss.jumble.Constants;
+import com.morphoss.jumble.R;
+import com.morphoss.jumble.Util;
 import com.morphoss.jumble.database.JumbleProvider;
 import com.morphoss.jumble.database.JumbleScoresTable;
-import com.morphoss.jumble.R;
 
 public class WinningActivity extends BaseActivity {
 
@@ -135,7 +135,7 @@ public class WinningActivity extends BaseActivity {
 	public void playWord(View view) {
 		String sound = JumbleActivity.wordHint.getSoundPath();
 		if(sound != null){
-		myApp.playSoundJumble(Constants.storagePath + File.separator + sound);
+		myApp.playSoundJumble(Util.createInternalStorage(WinningActivity.this) + File.separator + sound);
 		}
 
 	}

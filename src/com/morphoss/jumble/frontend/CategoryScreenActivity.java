@@ -36,7 +36,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.GridLayout;
 import com.morphoss.jumble.BaseActivity;
-import com.morphoss.jumble.Constants;
 import com.morphoss.jumble.Util;
 import com.morphoss.jumble.models.Category;
 import com.morphoss.jumble.models.ModelParser;
@@ -134,7 +133,7 @@ public class CategoryScreenActivity extends BaseActivity {
 		@Override
 		protected Collection<Category> doInBackground(Void... params) {
 
-			File file = new File(Constants.storagePath + File.separator
+			File file = new File(Util.createInternalStorage(CategoryScreenActivity.this) + File.separator
 					+ "words.json");
 
 			try {

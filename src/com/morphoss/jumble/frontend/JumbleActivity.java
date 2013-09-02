@@ -48,7 +48,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.morphoss.jumble.BaseActivity;
-import com.morphoss.jumble.Constants;
+import com.morphoss.jumble.R;
+import com.morphoss.jumble.Util;
 import com.morphoss.jumble.database.JumbleProvider;
 import com.morphoss.jumble.database.JumbleWordsTable;
 import com.morphoss.jumble.models.Category;
@@ -61,7 +62,6 @@ import com.morphoss.jumble.videos.HealthEndActivity;
 import com.morphoss.jumble.videos.HomeEndActivity;
 import com.morphoss.jumble.videos.NatureEndActivity;
 import com.morphoss.jumble.videos.SportsEndActivity;
-import com.morphoss.jumble.R;
 
 public class JumbleActivity extends BaseActivity {
 
@@ -235,7 +235,7 @@ public class JumbleActivity extends BaseActivity {
 		String sound = wordHint.getSoundPath();
 		if(sound != null){
 		Log.d(TAG, "soundPath: " + sound);
-		myApp.playSoundJumble(Constants.storagePath + File.separator + sound);
+		myApp.playSoundJumble(Util.createInternalStorage(JumbleActivity.this) + File.separator + sound);
 		}
 	}
 

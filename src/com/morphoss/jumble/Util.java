@@ -20,17 +20,31 @@ package com.morphoss.jumble;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Map;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 
 public class Util {
 
 	public static String TAG = "Util";
+	public static String dirPath = null;;
+
+	public static String createInternalStorage(Context context) {
+
+		File mydir = context.getDir("jumble", Context.MODE_PRIVATE); // Creating
+																		// an
+		// internal directory called jumble;
+		if (!mydir.exists()) {
+			mydir.mkdirs();
+		}
+		dirPath = mydir.getAbsolutePath();
+
+		return dirPath;
+
+	}
 
 	/**
 	 * this method is getting this image from the SD card
@@ -44,8 +58,8 @@ public class Util {
 	public static BitmapDrawable getImage(Context context, String imagePath) {
 		FileInputStream stream = null;
 		try {
-			stream = new FileInputStream(new File(Constants.storagePath
-					+ File.separator + imagePath));
+			stream = new FileInputStream(new File(createInternalStorage(context) + File.separator
+					+ imagePath));
 			return new BitmapDrawable(context.getApplicationContext()
 					.getResources(), stream);
 		} catch (IOException e) {

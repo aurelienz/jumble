@@ -36,16 +36,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.view.View.OnClickListener;
 
 import com.morphoss.jumble.BaseActivity;
-import com.morphoss.jumble.Constants;
+import com.morphoss.jumble.R;
+import com.morphoss.jumble.Util;
 import com.morphoss.jumble.videos.RulesVideoActivity;
 import com.morphoss.jumble.videos.StoryActivity;
-import com.morphoss.jumble.R;
 
 public class MainActivity extends BaseActivity {
 
@@ -206,7 +206,7 @@ public class MainActivity extends BaseActivity {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			File file = new File(Constants.storagePath);
+			File file = new File(Util.createInternalStorage(MainActivity.this));
 
 			if (!file.exists()) {
 				if (!file.mkdir()) {
