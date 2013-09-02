@@ -12,19 +12,15 @@
     <property
         name="assets"
         value="assets" />
-    <target name="clean" >
-        <delete file="${database}.zip" />
-        <delete dir="assets/database.zip" />
+    <target name="cleanzip">
+        <delete file="assets/database.zip" />
     </target>
-    <target name="zip" >
+    <target name="makezip" >
         <zip
             basedir="${database}"
             destfile="assets/database.zip"
             excludes="dont*.*" />
     </target>
-    <target name="unzip" >
-        <unzip
-            dest="${assets}"
-            src="${database}.zip" />
-    </target>
+    <target name="-pre-clean" depends="cleanzip" />
+    <target name="-pre-build" depends="makezip" />
 </project>
