@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -171,6 +172,7 @@ public class WinningActivity extends BaseActivity {
 			public void run() {
 				// Show the popup window of an unlocked level after 0.5s = 500ms
 				if (newLevel) {
+					findViewById(R.id.winningLayout).setAlpha((float) 0.8);
 					PopupWindowLevel();
 				}
 
@@ -189,7 +191,9 @@ public class WinningActivity extends BaseActivity {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View layout = inflater.inflate(R.layout.popup_level,
 					(ViewGroup) findViewById(R.id.popup_element));
-			pwindowLevel = new PopupWindow(layout, 420, 300, true);
+			DisplayMetrics metrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			pwindowLevel = new PopupWindow(layout,(int) (420* metrics.density), (int) (300* metrics.density), true);
 			pwindowLevel.showAtLocation(layout, Gravity.CENTER, 0, 0);
 			btnClosePopupLevel = (ImageView) layout
 					.findViewById(R.id.btn_close_popup);
@@ -203,6 +207,7 @@ public class WinningActivity extends BaseActivity {
 		public void onClick(View v) {
 			newLevel = false;
 			pwindowLevel.dismiss();
+			findViewById(R.id.winningLayout).setAlpha((float) 1);
 
 		}
 	};

@@ -46,7 +46,7 @@ public class ColorsEndActivity extends BaseActivity {
 		Locale current = this.getResources().getConfiguration().locale;
 		String cc = current.getCountry();
 		Log.d(TAG, "cc for music: " + cc);
-		if (cc.contains("FR")) {
+		if (cc.contains("fr")) {
 			myApp.playMusicVideo("level5_fr.ogg");
 		} else {
 			myApp.playMusicVideo("level5_en.ogg");

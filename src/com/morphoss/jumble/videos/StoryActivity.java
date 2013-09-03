@@ -45,7 +45,7 @@ public class StoryActivity extends BaseActivity {
 		super.onCreate(icicle);
 		String cc = SettingsActivity.getLanguageToLoad();
 		Log.d(TAG, "cc for music: " + cc);
-		if (cc.contains("FR")) {
+		if (cc.contains("fr")) {
 			myApp.playMusicVideo("story_fr.ogg");
 		} else {
 			myApp.playMusicVideo("story_en.ogg");

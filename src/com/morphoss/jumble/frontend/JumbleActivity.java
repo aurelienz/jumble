@@ -111,7 +111,7 @@ public class JumbleActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-
+				
 				initiatePopupWindow();
 			}
 		});

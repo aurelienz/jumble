@@ -56,6 +56,7 @@ public class SettingsActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setLanguage();
 		initControls();
 
 	}
@@ -195,5 +196,12 @@ public class SettingsActivity extends BaseActivity {
 	public static String getLanguageToLoad() {
 		return languageToLoad;
 	}
+	public static void setLanguageToLoad(String languageToLoad) {
+		SettingsActivity.languageToLoad = languageToLoad;
+	}
 
+	public static void setLanguage(){
+		languageToLoad = Locale.getDefault().getLanguage();
+		if(!(languageToLoad.contains("en")) || !(languageToLoad.contains("fr"))) languageToLoad = "en";
+	}
 }

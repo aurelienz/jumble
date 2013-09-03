@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -81,6 +82,8 @@ public class MainActivity extends BaseActivity {
 				.getBackground();
 		playAnimation.start();
 
+		SettingsActivity.setLanguage();
+		Log.d(TAG, "language to load :" + SettingsActivity.getLanguageToLoad());
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(PREFS_FILE,
 				Context.MODE_PRIVATE);
