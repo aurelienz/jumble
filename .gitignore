@@ -3,4 +3,4 @@ gen/
 assets/database.zip
 local.properties
 docs
-
+secure.properties
