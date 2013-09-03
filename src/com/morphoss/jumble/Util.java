@@ -20,7 +20,6 @@ package com.morphoss.jumble;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -48,7 +47,7 @@ public class Util {
 
 	/**
 	 * this method is getting this image from the SD card
-	 * 
+	 *
 	 * @param context
 	 *            Context required to work
 	 * @param imagePath
@@ -71,7 +70,7 @@ public class Util {
 	/**
 	 * this method get the string with useful informations (imagepath,
 	 * soundpath) from a particular file
-	 * 
+	 *
 	 * @param input
 	 * @return
 	 * @throws IOException
