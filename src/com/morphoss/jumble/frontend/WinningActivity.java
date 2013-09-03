@@ -129,13 +129,13 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This method plays the pronunciation of the word
-	 * 
+	 *
 	 * @param view
 	 */
 	public void playWord(View view) {
 		String sound = JumbleActivity.wordHint.getSoundPath();
-		if(sound != null){
-		myApp.playSoundJumble(Util.createInternalStorage(WinningActivity.this) + File.separator + sound);
+		if ( sound != null ) {
+		    myApp.playSoundJumble(Util.createInternalStorage(this) + File.separator + sound);
 		}
 
 	}
@@ -159,7 +159,7 @@ public class WinningActivity extends BaseActivity {
 		super.onResume();
 		JumbleActivity.numberMoves = 0;
 		myApp.resumeMusic();
-		for (int i = 0; i < CategoryScreenActivity.getPga().getCount(); i++) {
+		for (int i = 0; i < CategoryScreenActivity.getCount(); i++) {
 			if (MainActivity.scoreTotal == CategoryGridAdapter.getCategory(i)
 					.getMinScore()) {
 				newLevel = true;
@@ -199,7 +199,7 @@ public class WinningActivity extends BaseActivity {
 		}
 	}
 
-	private OnClickListener cancel_popup_level = new OnClickListener() {
+	private final OnClickListener cancel_popup_level = new OnClickListener() {
 		public void onClick(View v) {
 			newLevel = false;
 			pwindowLevel.dismiss();
@@ -215,7 +215,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This method goes back to the MainActivity
-	 * 
+	 *
 	 * @param view
 	 */
 	public void Screen_Home(View view) {
@@ -226,7 +226,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This method goes back to the CategoryScreenActivity
-	 * 
+	 *
 	 * @param view
 	 */
 	public void Screen_Category(View view) {
@@ -237,7 +237,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This method starts a new word
-	 * 
+	 *
 	 * @param view
 	 * @throws IOException
 	 */
@@ -252,7 +252,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This methods starts animations on the stars
-	 * 
+	 *
 	 * @param starId
 	 */
 	private void startStarAnimation(int starId) {
@@ -265,7 +265,7 @@ public class WinningActivity extends BaseActivity {
 	/**
 	 * This method gets the ID of the avatar selected and displays its picture
 	 * on the screen
-	 * 
+	 *
 	 * @param avatarID
 	 */
 	public void setAvatar(int avatarID) {
@@ -275,7 +275,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This method inserts the score in the database
-	 * 
+	 *
 	 * @param score
 	 * @param category
 	 * @param cc
