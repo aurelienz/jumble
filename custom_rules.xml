@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-    name="jumble"
-    basedir="."
-    default="zip" >
+<project name="jumble" >
+<property file="secure.properties" />
     <property
         name="jumble"
         value="${ant.jumble}" />
