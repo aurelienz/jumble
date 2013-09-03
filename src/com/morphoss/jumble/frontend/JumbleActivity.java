@@ -91,10 +91,6 @@ public class JumbleActivity extends BaseActivity {
 	private ImageView btnCreatePopup;
 	private ImageView btnHint;
 	private PopupWindow pwindo;
-	private boolean findWord = false;
-	private ViewGroup RootView1;
-	private ViewGroup RootView2;
-	private Drawable d;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +99,6 @@ public class JumbleActivity extends BaseActivity {
 		Bundle b = getIntent().getExtras();
 		int categoryIndex = b.getInt(CATEGORY_KEY);
 		currentCategory = CategoryGridAdapter.getCategory(categoryIndex);
-		RootView1 = (ViewGroup) findViewById(R.id.scrambled);
-		RootView2 = (ViewGroup) findViewById(R.id.guess);
 		touchListener = new MyTouchListener();
 		dragListener = new MyDragListener();
 		gridViewGuess = (GridView) findViewById(R.id.guess);
@@ -161,7 +155,7 @@ public class JumbleActivity extends BaseActivity {
 	/**
 	 * this method closes the popup window
 	 */
-	private OnClickListener cancel_button_click_listener = new OnClickListener() {
+	private final OnClickListener cancel_button_click_listener = new OnClickListener() {
 		public void onClick(View v) {
 			pwindo.dismiss();
 
@@ -172,7 +166,7 @@ public class JumbleActivity extends BaseActivity {
 	 * this method takes 10 points out of the total score each time that the
 	 * hint is used
 	 */
-	private OnClickListener hint_button_click_listener = new OnClickListener() {
+	private final OnClickListener hint_button_click_listener = new OnClickListener() {
 		public void onClick(View v) {
 			playHint(v);
 			MainActivity.scoreTotal -= 10;
@@ -190,18 +184,16 @@ public class JumbleActivity extends BaseActivity {
 	/**
 	 * This method selects a new word, scrambled it and displays it on the
 	 * screen
-	 * 
+	 *
 	 * @param word
 	 *            the word to guess
 	 */
 	private void startNewWord(Word word) {
 
 		wordHint = word;
-		findWord = false;
-		unbindDrawables(RootView1);
-		unbindDrawables(RootView2);
+		unbindDrawables(gridViewScrambled);
+		unbindDrawables(gridViewGuess);
 		imageAdaptor.setVisibility(View.VISIBLE);
-		d = imageAdaptor.getDrawable();
 
 		System.gc();
 		setTimeStart((int) System.currentTimeMillis());
@@ -228,7 +220,7 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This method plays the pronunciation of the word
-	 * 
+	 *
 	 * @param view
 	 */
 	public void playHint(View view) {
@@ -261,7 +253,7 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This methods generates the gridview with scrambled letters
-	 * 
+	 *
 	 * @param word
 	 * @return
 	 */
@@ -288,7 +280,7 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This method generates blank views in the guess gridview
-	 * 
+	 *
 	 * @param count
 	 * @return
 	 */
@@ -313,7 +305,7 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This method scrambles the word
-	 * 
+	 *
 	 * @param word
 	 *            to guess
 	 * @return the word scrambled
@@ -325,8 +317,8 @@ public class JumbleActivity extends BaseActivity {
 		String newWord;
 		do {
 			for (int i = 0; i < 50; i++) {
-				int position1 = (int) myRandom.nextInt(word.length());
-				int position2 = (int) myRandom.nextInt(word.length());
+				int position1 = myRandom.nextInt(word.length());
+				int position2 = myRandom.nextInt(word.length());
 				char temp;
 				temp = wordInCharArray[position1];
 				wordInCharArray[position1] = wordInCharArray[position2];
@@ -383,7 +375,7 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This class defines the rules of the drag and drop
-	 * 
+	 *
 	 */
 	class MyDragListener implements OnDragListener {
 		Drawable enterShape = getResources().getDrawable(R.drawable.letter);
@@ -435,11 +427,10 @@ public class JumbleActivity extends BaseActivity {
 		/**
 		 * This method swaps the views when a letter is dropped on the guess
 		 * gridview
-		 * 
+		 *
 		 * @param a
 		 * @param b
 		 */
-		@SuppressWarnings("deprecation")
 		public void swap(TextView a, TextView b) {
 			Drawable enterShape = getResources().getDrawable(R.drawable.letter);
 			Drawable normalShape = getResources().getDrawable(
@@ -486,12 +477,10 @@ public class JumbleActivity extends BaseActivity {
 			if (guessAdaptor.TestAnswer(testWord,
 					correctWord.getLocalisedWord())) {
 				Log.d(TAG, "good answer");
-				findWord = true;
-				if (findWord = true) {
-					gridViewGuess.removeViewInLayout(RootView1);
-					gridViewScrambled.removeViewInLayout(RootView2);
-					imageAdaptor.setVisibility(View.INVISIBLE);
-				}
+				gridViewGuess.removeViewInLayout(gridViewGuess);
+				gridViewScrambled.removeViewInLayout(gridViewScrambled);
+				imageAdaptor.setVisibility(View.INVISIBLE);
+
 				setTimeEnd((int) System.currentTimeMillis());
 				Log.d(TAG, "time end: " + timeEnd);
 				time = getTimeEnd() - getTimeStart();
@@ -513,7 +502,7 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This method inserts the word found in the table words of the database
-	 * 
+	 *
 	 * @param word
 	 * @param category
 	 * @param cc
@@ -534,7 +523,7 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This method gets the time when you start resolving the word
-	 * 
+	 *
 	 * @return
 	 */
 	public int getTimeStart() {
@@ -547,7 +536,7 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This methods gets the time when you have found the word
-	 * 
+	 *
 	 * @return
 	 */
 	public int getTimeEnd() {
