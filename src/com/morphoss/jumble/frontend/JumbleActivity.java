@@ -111,7 +111,7 @@ public class JumbleActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				
+				findViewById(R.id.jumbleLayout).setAlpha((float) 0.8);
 				initiatePopupWindow();
 			}
 		});
@@ -158,6 +158,7 @@ public class JumbleActivity extends BaseActivity {
 	private final OnClickListener cancel_button_click_listener = new OnClickListener() {
 		public void onClick(View v) {
 			pwindo.dismiss();
+			findViewById(R.id.jumbleLayout).setAlpha((float) 1);
 
 		}
 	};
