@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */ 
+ */
 package com.morphoss.jumble.util;
 
 import android.annotation.TargetApi;
@@ -55,7 +55,12 @@ public class SystemUiHiderHoneycomb extends SystemUiHiderBase {
 	 */
 	private boolean mVisible = true;
 
-	/**
+    public static final int SYSTEM_UI_FLAG_HIDE_NAVIGATION = 2;
+    public static final int SYSTEM_UI_FLAG_FULLSCREEN = 4;
+    public static final int SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION = 512;
+    public static final int SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN = 1024;
+
+    /**
 	 * Constructor not intended to be called by clients. Use
 	 * {@link SystemUiHider#getInstance} to obtain an instance.
 	 */
@@ -72,17 +77,17 @@ public class SystemUiHiderHoneycomb extends SystemUiHiderBase {
 			// the status bar. Note that some of these constants are new as of
 			// API 16 (Jelly Bean). It is safe to use them, as they are inlined
 			// at compile-time and do nothing on pre-Jelly Bean devices.
-			mShowFlags |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-			mHideFlags |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-					| View.SYSTEM_UI_FLAG_FULLSCREEN;
+			mShowFlags |= SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+			mHideFlags |= SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+					| SYSTEM_UI_FLAG_FULLSCREEN;
 		}
 
 		if ((mFlags & FLAG_HIDE_NAVIGATION) != 0) {
 			// If the client requested hiding navigation, add relevant flags.
-			mShowFlags |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-			mHideFlags |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-					| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-			mTestFlags |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+			mShowFlags |= SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+			mHideFlags |= SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+					| SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+			mTestFlags |= SYSTEM_UI_FLAG_HIDE_NAVIGATION;
 		}
 	}
 
@@ -111,12 +116,12 @@ public class SystemUiHiderHoneycomb extends SystemUiHiderBase {
 		return mVisible;
 	}
 
-	private View.OnSystemUiVisibilityChangeListener mSystemUiVisibilityChangeListener = new View.OnSystemUiVisibilityChangeListener() {
+	private final View.OnSystemUiVisibilityChangeListener mSystemUiVisibilityChangeListener = new View.OnSystemUiVisibilityChangeListener() {
 		@Override
 		public void onSystemUiVisibilityChange(int vis) {
 			// Test against mTestFlags to see if the system UI is visible.
 			if ((vis & mTestFlags) != 0) {
-				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+				if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 					// Pre-Jelly Bean, we must manually hide the action bar
 					// and use the old window flags API.
 					mActivity.getActionBar().hide();
@@ -132,7 +137,7 @@ public class SystemUiHiderHoneycomb extends SystemUiHiderBase {
 
 			} else {
 				mAnchorView.setSystemUiVisibility(mShowFlags);
-				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 					// Pre-Jelly Bean, we must manually show the action bar
 					// and use the old window flags API.
 					mActivity.getActionBar().show();
