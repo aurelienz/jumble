@@ -26,8 +26,6 @@ import org.json.JSONException;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.NavUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -35,11 +33,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.GridLayout;
+
 import com.morphoss.jumble.BaseActivity;
+import com.morphoss.jumble.Constants;
+import com.morphoss.jumble.R;
 import com.morphoss.jumble.Util;
 import com.morphoss.jumble.models.Category;
 import com.morphoss.jumble.models.ModelParser;
-import com.morphoss.jumble.R;
 
 public class CategoryScreenActivity extends BaseActivity {
 
@@ -47,31 +47,15 @@ public class CategoryScreenActivity extends BaseActivity {
 	 * This class displays the categories and load them from the JSON file
 	 */
 	private static final String TAG = "CategoryActivity";
-	private static final int CATEGORIES_LOADED = 0;
-	private static final int CATEGORIES_NOT_LOADED = 1;
 	private GridLayout gridLayout;
 	private static CategoryGridAdapter pga;
 
-	private Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-
-			// The list of categories has been created - populate the Adapter
-			// with views.
-			if (msg.what == CATEGORIES_LOADED) {
-			} else if (msg.what == CATEGORIES_NOT_LOADED) {
-				finish();
-			}
-		}
-	};
-
 	/**
-	 * 
+	 *
 	 * @return the category gridadapter
 	 */
-	public static CategoryGridAdapter getPga() {
-		return pga;
+	public static int getCount() {
+		return pga.getCount();
 	}
 
 	@Override
@@ -112,28 +96,28 @@ public class CategoryScreenActivity extends BaseActivity {
 		int height = displaymetrics.heightPixels;
 		int width = displaymetrics.widthPixels;
 		pga = new CategoryGridAdapter(this, width, height);
-		new LoadCategoryTask().execute();
+
+    	new LoadCategoryTask().execute();
 
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch ( item.getItemId() ) {
+            case android.R.id.home:
 
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	private class LoadCategoryTask extends
-			AsyncTask<Void, Void, Collection<Category>> {
+	private class LoadCategoryTask extends AsyncTask<Void, Void, Collection<Category>> {
 
 		@Override
 		protected Collection<Category> doInBackground(Void... params) {
 
-			File file = new File(Util.createInternalStorage(CategoryScreenActivity.this) + File.separator
+			File file = new File(Constants.storagePath + File.separator
 					+ "words.json");
 
 			try {
@@ -155,39 +139,39 @@ public class CategoryScreenActivity extends BaseActivity {
 		@Override
 		public void onPostExecute(Collection<Category> result) {
 			if (result == null) {
-				mHandler.sendEmptyMessage(CATEGORIES_NOT_LOADED);
-
-			} else {
-				pga.setCategories(result);
-				mHandler.sendEmptyMessage(CATEGORIES_LOADED);
-				gridLayout.removeAllViews();
-				for (int i = 0; i < pga.getCount(); i++) {
-					final int num = i;
-					View v = pga.getView(i, null, gridLayout);
-					gridLayout.addView(v, i);
-					if (MainActivity.scoreTotal >= CategoryGridAdapter
-							.getCategory(i).getMinScore()) {
-						if (MainActivity.scoreTotal == CategoryGridAdapter
-								.getCategory(i).getMinScore()) {
-							Log.d(TAG, "a category is unlocked");
-						}
-						v.setOnClickListener(new OnClickListener() {
-							public void onClick(View v) {
-								Intent intent = new Intent(
-										CategoryScreenActivity.this,
-										JumbleActivity.class);
-								intent.putExtra(JumbleActivity.CATEGORY_KEY,
-										num);
-								intent.putExtra(WinningActivity.AVATAR_ID,
-										AvatarActivity.id);
-								startActivity(intent);
-								finish();
-							}
-						});
-					}
-
-				}
+			    Log.e(TAG,"Could not load categories!!!!!");
+			    finish();
+			    return;
 			}
+
+			try {
+                pga.setCategories(result);
+                gridLayout.removeAllViews();
+                for (int i = 0; i < pga.getCount(); i++) {
+                	final int num = i;
+                	View v = pga.getView(i, null, null);
+                	gridLayout.addView(v, i);
+                	pga.setLayout(v);
+                	if (MainActivity.scoreTotal >= CategoryGridAdapter.getCategory(i).getMinScore()) {
+                		if (MainActivity.scoreTotal == CategoryGridAdapter.getCategory(i).getMinScore()) {
+                			Log.d(TAG, "a category is unlocked");
+                		}
+                		v.setOnClickListener(new OnClickListener() {
+                			public void onClick(View v) {
+                				Intent intent = new Intent( CategoryScreenActivity.this, JumbleActivity.class);
+                				intent.putExtra(JumbleActivity.CATEGORY_KEY, num);
+                				intent.putExtra(WinningActivity.AVATAR_ID, AvatarActivity.id);
+                				startActivity(intent);
+                				finish();
+                			}
+                		});
+                	}
+
+                }
+            }
+            catch ( Exception e ) {
+                Log.w( TAG, "Exception", e );
+            }
 		}
 
 	}

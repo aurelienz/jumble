@@ -22,35 +22,31 @@ import java.util.Collection;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.morphoss.jumble.models.Category;
 import com.morphoss.jumble.R;
+import com.morphoss.jumble.models.Category;
 
 public class CategoryGridAdapter extends BaseAdapter {
 
 	/**
 	 * This class is an adapter for the categor gridview
 	 */
-	private Context context;
+	private final Context context;
 	private static ArrayList<Category> categories = null;;
 	private int buttonWidth;
 	private int buttonHeight;
-	private int width;
-	private int height;
+	private final int width;
+	private final int height;
 	private int scoreToUnlock;
 	private ImageView categoryImage;
+	private TextView categoryLabel;
 	private Category category;
-	private String status = "locked";
-
 	private static final String TAG = "CategoryGridAdapter";
 
 	public CategoryGridAdapter(Context context, int width, int height) {
@@ -66,38 +62,37 @@ public class CategoryGridAdapter extends BaseAdapter {
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		FrameLayout gridView;
 		category = categories.get(position);
-		gridView = (FrameLayout) inflater.inflate(R.layout.activity_category,
-				null);
-		gridView.setTag(category.getId());
+		View categoryLayout = inflater.inflate(R.layout.activity_category, null);
+        categoryLabel = (TextView) categoryLayout.findViewById(R.id.category_label);
+        categoryImage = (ImageView) categoryLayout.findViewById(R.id.category_image);
 
-		TextView textView = (TextView) gridView
-				.findViewById(R.id.grid_item_label);
+		categoryLayout.setTag(category.getId());
+		categoryLabel.setText(category.getLocalisedName(context));
 
-		textView.setText(category.getLocalisedName(context));
-
-		categoryImage = (ImageView) gridView.findViewById(R.id.grid_item_image);
-
-		LayoutParams lp = new LayoutParams(buttonWidth, buttonHeight,
-				Gravity.FILL);
-		gridView.setLayoutParams(lp);
 		lockLevels();
 
-		return gridView;
+		return categoryLayout;
 	}
+
+	public void setLayout( View v ) {
+        ViewGroup.LayoutParams lp = v.getLayoutParams();
+        lp.height = buttonHeight;
+        lp.width = buttonWidth;
+        v.setLayoutParams(lp);
+	}
+
 
 	/**
 	 * This method sets 8 categories on the screen
-	 * 
+	 *
 	 * @param categories
 	 */
 	public void setCategories(Collection<Category> categories) {
-		this.categories = new ArrayList<Category>();
-		this.categories.addAll(categories);
+		CategoryGridAdapter.categories = new ArrayList<Category>();
+		CategoryGridAdapter.categories.addAll(categories);
 		if (width > height) {
 			buttonWidth = width / 4;
 			buttonHeight = height / 2;
@@ -108,7 +103,6 @@ public class CategoryGridAdapter extends BaseAdapter {
 
 		this.notifyDataSetInvalidated();
 		this.notifyDataSetChanged();
-
 	}
 
 	@Override
@@ -130,7 +124,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 
 	/**
 	 * this method gets the current category
-	 * 
+	 *
 	 * @param position
 	 * @return the category selected
 	 */
@@ -147,7 +141,6 @@ public class CategoryGridAdapter extends BaseAdapter {
 		if (MainActivity.scoreTotal >= scoreToUnlock) {
 			// unlock level
 			categoryImage.setImageDrawable(category.getImage(context));
-			status = "unlocked";
 		}
 	}
 
