@@ -111,7 +111,6 @@ public class JumbleActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				findViewById(R.id.jumbleLayout).setAlpha((float) 0.8);
 				initiatePopupWindow();
 			}
 		});
@@ -138,8 +137,7 @@ public class JumbleActivity extends BaseActivity {
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-			pwindo = new PopupWindow(layout, (int) (420 * metrics.density),
-					(int) (300 * metrics.density), true);
+			pwindo = new PopupWindow(layout, metrics.widthPixels, metrics.heightPixels, true);
 			pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
 			btnClosePopup = (ImageView) layout
@@ -158,7 +156,6 @@ public class JumbleActivity extends BaseActivity {
 	private final OnClickListener cancel_button_click_listener = new OnClickListener() {
 		public void onClick(View v) {
 			pwindo.dismiss();
-			findViewById(R.id.jumbleLayout).setAlpha((float) 1);
 
 		}
 	};
