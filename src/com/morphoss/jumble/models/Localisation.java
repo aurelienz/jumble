@@ -26,7 +26,6 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 public class Localisation implements Parcelable {
 
@@ -41,7 +40,6 @@ public class Localisation implements Parcelable {
 	private String soundPath;
 	private Difficulty level;
 
-	@SuppressWarnings("unused")
 	private Localisation(String nameKey, String cc, JSONObject data)
 			throws JSONException {
 		this.nameKey = nameKey;
@@ -69,7 +67,7 @@ public class Localisation implements Parcelable {
 
 	/**
 	 * This method checks if the word has an other localization than English
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean hasLocalisedWord() {
@@ -79,7 +77,7 @@ public class Localisation implements Parcelable {
 	/**
 	 * This method checks if the sound of the word has an other localization
 	 * than English
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean hasLocalisedSound() {
@@ -89,7 +87,7 @@ public class Localisation implements Parcelable {
 	/**
 	 * This method checks if the difficulty of the word has an other
 	 * localization than English
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean hasLocalisedLevel() {
@@ -162,7 +160,7 @@ public class Localisation implements Parcelable {
 	/**
 	 * This method gets all the infomations about localization from the JSON
 	 * file
-	 * 
+	 *
 	 * @param json
 	 * @return
 	 * @throws JSONException
