@@ -43,6 +43,7 @@ public class JumbleProvider extends ContentProvider {
 	private static final int SINGLE_WORD = 2;
 	private static final int ALL_SCORES = 3;
 	private static final int SINGLE_SCORE = 4;
+	private static final int ADD_SCORE = 5;
 
 	private static final UriMatcher uriMatcher;
 	static {
@@ -50,6 +51,7 @@ public class JumbleProvider extends ContentProvider {
 		uriMatcher.addURI(AUTHORITY, "words", ALL_WORDS);
 		uriMatcher.addURI(AUTHORITY, "scores", ALL_SCORES);
 		uriMatcher.addURI(AUTHORITY, "words/#", SINGLE_WORD);
+		uriMatcher.addURI(AUTHORITY, "words/addscore", ADD_SCORE);
 		uriMatcher.addURI(AUTHORITY, "scores/#", SINGLE_SCORE);
 	}
 
@@ -199,17 +201,12 @@ public class JumbleProvider extends ContentProvider {
 					selection, selectionArgs);
 			getContext().getContentResolver().notifyChange(uri, null);
 			return updateCount;
-		case SINGLE_SCORE:
-			String id2 = uri.getPathSegments().get(1);
-			selection = JumbleScoresTable._ID
-					+ "="
-					+ id2
-					+ (!TextUtils.isEmpty(selection) ? " AND (" + selection
-							+ ')' : "");
-			int updateCount2 = db.update(JumbleScoresTable.TABLE, values,
-					selection, selectionArgs);
-			getContext().getContentResolver().notifyChange(uri, null);
-			return updateCount2;
+		case ADD_SCORE:
+			db.execSQL(
+					"UPDATE " + JumbleWordsTable.TABLE + " SET " +
+					JumbleWordsTable.SCORE+"="+JumbleWordsTable.SCORE+"+"+values.getAsInteger(JumbleWordsTable.ADDSCORE)
+					+ " WHERE "+ selection, selectionArgs);
+			return 1;
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}

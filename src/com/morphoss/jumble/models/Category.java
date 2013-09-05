@@ -37,7 +37,10 @@ import android.util.Log;
 import com.morphoss.jumble.Util;
 import com.morphoss.jumble.database.JumbleProvider;
 import com.morphoss.jumble.database.JumbleWordsTable;
+import com.morphoss.jumble.frontend.CategoryScreenActivity;
+import com.morphoss.jumble.frontend.JumbleActivity;
 import com.morphoss.jumble.frontend.SettingsActivity;
+import com.morphoss.jumble.frontend.WinningActivity;
 
 public class Category {
 
@@ -52,6 +55,7 @@ public class Category {
 	private ArrayList<Word> words = new ArrayList<Word>();
 	private String imagePath;
 	private final int minScore;
+	private static ArrayList<String> solved = new ArrayList<String>();
 
 	/**
 	 * 
@@ -175,13 +179,15 @@ public class Category {
 		printWordList("All Available Words", words);
 		words = getLocalisedWords(words);
 		printWordList("All Localised Available Words", words);
-		ArrayList<String> solved = getSolvedWordsForCategory(context, this);
+		solved = getSolvedWordsForCategory(context, this);
 		printWordList("All solved Words", solved);
-		words = removeSolvedFromList(words, solved);
+		words = WinningActivity.removeSolvedFromList(context, words, solved);
 		printWordList("All Available Words minus solved", words);
 
-		removeAllButEasiest(words);
-		printWordList("All but easiest", words);
+		if ( words.size() > 15 ) {
+			removeAllButEasiest(words);
+			printWordList("All but easiest", words);
+		}
 		Word word = getRandomItem(words);
 		return word;
 
@@ -235,24 +241,6 @@ public class Category {
 	}
 
 	/**
-	 * 
-	 * @param wordList
-	 * @param solvedList
-	 * @return the list of words without the words already solved
-	 */
-	public static ArrayList<Word> removeSolvedFromList(
-			ArrayList<Word> wordList, ArrayList<String> solvedList) {
-
-		ArrayList<Word> filteredWords = new ArrayList<Word>();
-		for (Word word : wordList) {
-			if (!solvedList.contains(word.getNameKey()))
-				filteredWords.add(word);
-		}
-
-		return filteredWords;
-	}
-
-	/**
 	 * This method gets the list of the easiest words still available
 	 * 
 	 * @param context
@@ -301,13 +289,20 @@ public class Category {
 	 * @param message
 	 * @param list
 	 */
-	public static void printWordList(String message, ArrayList<?> list) {
+	public void printWordList(String message, ArrayList<?> list) {
 		// log message displaying all the elements of list
 		Log.d(TAG, message);
 		String listString = "";
 		for (Object o : list)
 			listString += o + ",";
 		Log.d(TAG, listString);
+	}
+
+	public static ArrayList<String> getSolvedWordsList(Context context) {
+		if(solved == null){
+			solved = getSolvedWordsForCategory(context, JumbleActivity.currentCategory);
+		}
+		return solved;
 	}
 
 }

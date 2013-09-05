@@ -19,12 +19,16 @@ package com.morphoss.jumble.frontend;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -44,6 +48,9 @@ import com.morphoss.jumble.R;
 import com.morphoss.jumble.Util;
 import com.morphoss.jumble.database.JumbleProvider;
 import com.morphoss.jumble.database.JumbleScoresTable;
+import com.morphoss.jumble.database.JumbleWordsTable;
+import com.morphoss.jumble.models.Category;
+import com.morphoss.jumble.models.Word;
 
 public class WinningActivity extends BaseActivity {
 
@@ -62,6 +69,7 @@ public class WinningActivity extends BaseActivity {
 	private PopupWindow pwindowLevel;
 	private ImageView btnClosePopupLevel;
 	private boolean newLevel = false;
+	public static int scoreDatabase = 100;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +95,10 @@ public class WinningActivity extends BaseActivity {
 		Log.d(TAG, "total score :" + MainActivity.scoreTotal);
 		TextView textScore = (TextView) findViewById(R.id.score_value_total);
 		textScore.setText("" + MainActivity.scoreTotal);
+		insertWord(WinningActivity.this,
+				JumbleActivity.correctWord.getNameKey(),
+				JumbleActivity.currentCategory.getName(this),
+				SettingsActivity.getLanguageToLoad(), scoreDatabase);
 
 		Button playImage = (Button) findViewById(R.id.nextWord);
 		AnimationDrawable playAnimation = (AnimationDrawable) playImage
@@ -107,6 +119,7 @@ public class WinningActivity extends BaseActivity {
 			findViewById(R.id.star12).setVisibility(View.VISIBLE);
 			findViewById(R.id.star13).setVisibility(View.VISIBLE);
 			scoreWord = 100;
+			scoreDatabase = 1000;
 		} else if (JumbleActivity.numberMoves == JumbleActivity.correctWord
 				.getLocalisedWord().length() || JumbleActivity.time < 30000) {
 			// 2 stars
@@ -116,6 +129,7 @@ public class WinningActivity extends BaseActivity {
 			TextView text1 = (TextView) findViewById(R.id.text_win);
 			text1.setText(R.string.win2);
 			scoreWord = 50;
+			scoreDatabase = 50;
 		} else {
 			// 1 star
 			findViewById(R.id.star12).setVisibility(View.GONE);
@@ -124,19 +138,21 @@ public class WinningActivity extends BaseActivity {
 			TextView text2 = (TextView) findViewById(R.id.text_win);
 			text2.setText(R.string.win3);
 			scoreWord = 20;
+			scoreDatabase = 0;
 		}
 
 	}
 
 	/**
 	 * This method plays the pronunciation of the word
-	 *
+	 * 
 	 * @param view
 	 */
 	public void playWord(View view) {
 		String sound = JumbleActivity.wordHint.getSoundPath();
-		if ( sound != null ) {
-		    myApp.playSoundJumble(Util.createInternalStorage(this) + File.separator + sound);
+		if (sound != null) {
+			myApp.playSoundJumble(Util.createInternalStorage(this)
+					+ File.separator + sound);
 		}
 
 	}
@@ -192,7 +208,8 @@ public class WinningActivity extends BaseActivity {
 					(ViewGroup) findViewById(R.id.popup_element));
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			pwindowLevel = new PopupWindow(layout, metrics.widthPixels, metrics.heightPixels, true);
+			pwindowLevel = new PopupWindow(layout, metrics.widthPixels,
+					metrics.heightPixels, true);
 			pwindowLevel.showAtLocation(layout, Gravity.CENTER, 0, 0);
 			btnClosePopupLevel = (ImageView) layout
 					.findViewById(R.id.btn_close_popup);
@@ -218,7 +235,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This method goes back to the MainActivity
-	 *
+	 * 
 	 * @param view
 	 */
 	public void Screen_Home(View view) {
@@ -229,7 +246,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This method goes back to the CategoryScreenActivity
-	 *
+	 * 
 	 * @param view
 	 */
 	public void Screen_Category(View view) {
@@ -240,7 +257,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This method starts a new word
-	 *
+	 * 
 	 * @param view
 	 * @throws IOException
 	 */
@@ -255,7 +272,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This methods starts animations on the stars
-	 *
+	 * 
 	 * @param starId
 	 */
 	private void startStarAnimation(int starId) {
@@ -268,7 +285,7 @@ public class WinningActivity extends BaseActivity {
 	/**
 	 * This method gets the ID of the avatar selected and displays its picture
 	 * on the screen
-	 *
+	 * 
 	 * @param avatarID
 	 */
 	public void setAvatar(int avatarID) {
@@ -278,7 +295,7 @@ public class WinningActivity extends BaseActivity {
 
 	/**
 	 * This method inserts the score in the database
-	 *
+	 * 
 	 * @param score
 	 * @param category
 	 * @param cc
@@ -297,4 +314,84 @@ public class WinningActivity extends BaseActivity {
 				+ " with cc :" + cc + " in database");
 	}
 
+	private void insertWord(Context context, String word, String category,
+			String cc, int scoreOfWord) {
+
+		if ( scoreOfWord == 0 ) return;
+
+		resolver = this.getContentResolver();
+		ContentValues cv = new ContentValues();
+		ArrayList<String> solved = Category
+				.getSolvedWordsList(WinningActivity.this);
+		String action = null;
+		if (solved.contains(word)) {
+			action = "update";
+			// don't add a new row, just update the score
+			cv.put(JumbleWordsTable.ADDSCORE, scoreOfWord);
+			resolver.update(Uri.withAppendedPath(JumbleProvider.CONTENT_URI_WORDS, "addscore"), cv, 
+					JumbleWordsTable.WORD+"=? AND "+JumbleWordsTable.CC+"=?",
+					new String[] { word, cc } );
+			
+		} else {
+			action = "insert";
+			cv.put(JumbleWordsTable.WORD, word);
+			cv.put(JumbleWordsTable.CATEGORY, category);
+			cv.put(JumbleWordsTable.CC, cc);
+			cv.put(JumbleWordsTable.SCORE, scoreOfWord);
+			resolver.insert(JumbleProvider.CONTENT_URI_WORDS, cv);
+		}
+
+		Log.d(TAG, action+" the word:" + word + " from category : " + category
+				+ " with cc :" + cc + " with score :" + scoreOfWord
+				+ ".  Database score is now " + getScorefromTable(context, word));
+	}
+
+	public static ArrayList<Word> removeSolvedFromList(Context context,
+			ArrayList<Word> wordList, ArrayList<String> solvedList) {
+
+		ArrayList<Word> filteredWords = new ArrayList<Word>();
+
+		// if the score of the word is over 2000 remove from the list
+		for (Word word : wordList) {
+
+			if (!solvedList.contains(word.getNameKey())) {
+				filteredWords.add(word);
+
+			} else {
+				int score = getScorefromTable(context, word.getNameKey());
+				if (score < 5000) {
+					filteredWords.add(word);
+				}
+			}
+		}
+		return filteredWords;
+	}
+
+	private static int getScorefromTable(Context context, String word) {
+		// get the score of the current word
+		String[] projection = { JumbleWordsTable.SCORE };
+		// select the columns where WORD = word and CC = currentCC
+		String selection = JumbleWordsTable.WORD + " = ? AND "
+				+ JumbleWordsTable.CC + " =?";
+		String[] selectionArgs = new String[] { word,
+				SettingsActivity.getLanguageToLoad() };
+		// cursor on the unique row pointing on the score with WORD=word and
+		// CC=currentCC
+		Cursor cursor = null;
+		try {
+			cursor = context.getContentResolver().query(JumbleProvider.CONTENT_URI_WORDS,
+					projection, selection, selectionArgs, null);
+			// set the maximum score in a local integer
+			if ( !cursor.moveToFirst() ) return 0;
+			ContentValues myRow = new ContentValues();
+			DatabaseUtils.cursorRowToContentValues(cursor, myRow);
+			return myRow.getAsInteger(JumbleWordsTable.SCORE);
+		} catch (Exception e) {
+			Log.e(TAG,Log.getStackTraceString(e));
+		}
+		finally {
+			if ( cursor != null ) cursor.close();
+		}
+		return 0;
+	}
 }

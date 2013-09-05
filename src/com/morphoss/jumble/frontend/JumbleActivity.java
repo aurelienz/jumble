@@ -79,8 +79,8 @@ public class JumbleActivity extends BaseActivity {
 	private GridView gridViewGuess;
 	private GridView gridViewScrambled;
 	private ImageView imageAdaptor;
-	private TileGridAdapter guessAdaptor;
-	private TileGridAdapter scrambledAdaptor;
+	private JumbleGridAdapter guessAdaptor;
+	private JumbleGridAdapter scrambledAdaptor;
 	private int timeStart;
 	private int timeEnd;
 	private MyTouchListener touchListener;
@@ -255,7 +255,7 @@ public class JumbleActivity extends BaseActivity {
 	 * @param word
 	 * @return
 	 */
-	private TileGridAdapter generateWordAdapter(String word) {
+	private JumbleGridAdapter generateWordAdapter(String word) {
 		ArrayList<View> views = new ArrayList<View>();
 
 		for (int i = 0; i < word.length(); i++) {
@@ -272,7 +272,7 @@ public class JumbleActivity extends BaseActivity {
 			views.add(layout);
 		}
 
-		return new TileGridAdapter(this, views);
+		return new JumbleGridAdapter(this, views);
 
 	}
 
@@ -282,7 +282,7 @@ public class JumbleActivity extends BaseActivity {
 	 * @param count
 	 * @return
 	 */
-	private TileGridAdapter generateBlankAdapter(int count) {
+	private JumbleGridAdapter generateBlankAdapter(int count) {
 		ArrayList<View> views = new ArrayList<View>();
 
 		for (int i = 0; i < count; i++) {
@@ -297,7 +297,7 @@ public class JumbleActivity extends BaseActivity {
 			layout.setOnDragListener(dragListener);
 			views.add(layout);
 		}
-		return new TileGridAdapter(this, views);
+		return new JumbleGridAdapter(this, views);
 
 	}
 
@@ -483,8 +483,6 @@ public class JumbleActivity extends BaseActivity {
 				Log.d(TAG, "time end: " + timeEnd);
 				time = getTimeEnd() - getTimeStart();
 				Log.d(TAG, "You have found the word in: " + time + " ms");
-				insertWord(correctWord.getNameKey(),
-						currentCategory.getName(this), cc);
 				Intent intent = new Intent(this, WinningActivity.class);
 				intent.putExtra(WinningActivity.HAVE_MORE_WORDS,
 						(currentCategory.size() > 0));
@@ -505,19 +503,7 @@ public class JumbleActivity extends BaseActivity {
 	 * @param category
 	 * @param cc
 	 */
-	private void insertWord(String word, String category, String cc) {
 
-		ContentValues cv = new ContentValues();
-		cv.put(JumbleWordsTable.WORD, word);
-		cv.put(JumbleWordsTable.CATEGORY, category);
-		cv.put(JumbleWordsTable.CC, cc);
-
-		resolver = this.getContentResolver();
-		resolver.insert(JumbleProvider.CONTENT_URI_WORDS, cv);
-
-		Log.d(TAG, "add the word:" + word + " from category : " + category
-				+ " with cc :" + cc + " in database");
-	}
 
 	/**
 	 * This method gets the time when you start resolving the word
