@@ -359,7 +359,7 @@ public class WinningActivity extends BaseActivity {
 
 			} else {
 				int score = getScorefromTable(context, word.getNameKey());
-				if (score < 5000) {
+				if (score < 3000) {
 					filteredWords.add(word);
 				}
 			}

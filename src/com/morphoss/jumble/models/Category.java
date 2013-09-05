@@ -75,8 +75,7 @@ public class Category {
 
 		return Util.getImage(context, imagePath);
 	}
-	
-	
+
 	private void populateCache(Context context) {
 		InputStream fis = null;
 	}
@@ -184,17 +183,18 @@ public class Category {
 		words = WinningActivity.removeSolvedFromList(context, words, solved);
 		printWordList("All Available Words minus solved", words);
 
-		if ( words.size() > 15 ) {
-			removeAllButEasiest(words);
-			printWordList("All but easiest", words);
-		}
+		int countEasiestWords = getCountAllButEasiest(words);
+		Log.d(TAG, "count of easy words :"+countEasiestWords);
+		if(countEasiestWords > 5) removeAllButEasiest(words);
+		printWordList("All but easiest", words);
 		Word word = getRandomItem(words);
 		return word;
 
 	}
 
-	public static ArrayList<Word> getLocalisedWords(ArrayList<Word> list){
-		
+
+	public static ArrayList<Word> getLocalisedWords(ArrayList<Word> list) {
+
 		ArrayList<Word> filteredWords = new ArrayList<Word>();
 		for (Word word : list) {
 			if (word.hasLocalisation())
@@ -203,6 +203,7 @@ public class Category {
 
 		return filteredWords;
 	}
+
 	/**
 	 * This methods returns the words already found
 	 * 
@@ -265,6 +266,22 @@ public class Category {
 		}
 
 	}
+	
+	private int getCountAllButEasiest(ArrayList<Word> words) {
+		
+		//give the easiest level available
+		Difficulty easiest = Difficulty.ADVANCED;
+		int count = 0;
+		for (Word word : words) {
+			if (word.getLevel().ordinal() < easiest.ordinal()) {
+				easiest = word.getLevel();
+			}
+			if(word.getLevel() == easiest) count+=1;
+		}
+
+		
+		return count;
+	}
 
 	/**
 	 * 
@@ -299,8 +316,9 @@ public class Category {
 	}
 
 	public static ArrayList<String> getSolvedWordsList(Context context) {
-		if(solved == null){
-			solved = getSolvedWordsForCategory(context, JumbleActivity.currentCategory);
+		if (solved == null) {
+			solved = getSolvedWordsForCategory(context,
+					JumbleActivity.currentCategory);
 		}
 		return solved;
 	}
