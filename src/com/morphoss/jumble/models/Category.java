@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import org.json.JSONArray;
@@ -174,131 +175,57 @@ public class Category {
 	 * @return the next word of the available ones
 	 */
 	public Word getNextWord(Context context) {
-		ArrayList<Word> words = this.words; // getAllWordsForThisCategory();
-		printWordList("All Available Words", words);
-		words = getLocalisedWords(words);
+		ArrayList<Word> words = this.words;
+		ArrayList<Word> wordsEasy = new ArrayList<Word>();
+		ArrayList<Word> wordsMedium = new ArrayList<Word>();
+		ArrayList<Word> wordsAdvanced = new ArrayList<Word>();
+		
+		words = CategoryWords.getLocalisedWordsFromCategory(words);
 		printWordList("All Localised Available Words", words);
-		solved = getSolvedWordsForCategory(context, this);
-		printWordList("All solved Words", solved);
-		words = WinningActivity.removeSolvedFromList(context, words, solved);
-		printWordList("All Available Words minus solved", words);
+		solved = CategoryWords.getSolvedWordsFromCategory(context, this);
+		printWordList("All Solved Words", solved);
+		words = CategoryWords.removeSolvedFromList(context, words, solved);
+		printWordList("All Available Words", words);
 
-		int countEasiestWords = getCountAllButEasiest(words);
-		Log.d(TAG, "count of easy words :"+countEasiestWords);
-		if(countEasiestWords > 5) removeAllButEasiest(words);
-		printWordList("All but easiest", words);
-		Word word = getRandomItem(words);
+		wordsEasy = CategoryWords.getWordsByDifficulty(words, Difficulty.EASY);
+		printWordList("All Easy Available Words", wordsEasy);
+		wordsMedium = CategoryWords.getWordsByDifficulty(words,
+				Difficulty.MEDIUM);
+		printWordList("All Medium Available Words", wordsMedium);
+		wordsAdvanced = CategoryWords.getWordsByDifficulty(words,
+				Difficulty.ADVANCED);
+		printWordList("All Advanced Available Words", wordsAdvanced);
+
+		int countEasyWords = CategoryWords.getCountAllByDifficulty(wordsEasy, Difficulty.EASY);
+		Log.d(TAG, "count of easy words :" + countEasyWords);
+		int countMediumWords = CategoryWords.getCountAllByDifficulty(wordsMedium,
+				Difficulty.MEDIUM);
+		Log.d(TAG, "count of medium words :" + countMediumWords);
+		int countAdvancedWords = CategoryWords.getCountAllByDifficulty(wordsAdvanced,
+				Difficulty.ADVANCED);
+		Log.d(TAG, "count of advanced words :" + countAdvancedWords);
+
+		int countEasiestWords = CategoryWords.getCountAllButEasiest(words);
+		Log.d(TAG, "count of easiest words :" + countEasiestWords);
+
+		ArrayList<Word> filteredwords = new ArrayList<Word>();
+		if (countEasyWords > 5) {
+			filteredwords = wordsEasy;
+		} else if (countMediumWords != 0 && countEasyWords <= 5) {
+			filteredwords.addAll(wordsEasy);
+			filteredwords.addAll(wordsMedium);
+		} else if (countEasyWords == 00 && countMediumWords <=5) {
+			filteredwords.addAll(wordsAdvanced);
+		} else {
+			filteredwords = words;
+			CategoryWords.removeAllButEasiest(filteredwords);
+		}
+
+		Word word = CategoryWords.getRandomItem(filteredwords);
+
 		return word;
-
 	}
 
-
-	public static ArrayList<Word> getLocalisedWords(ArrayList<Word> list) {
-
-		ArrayList<Word> filteredWords = new ArrayList<Word>();
-		for (Word word : list) {
-			if (word.hasLocalisation())
-				filteredWords.add(word);
-		}
-
-		return filteredWords;
-	}
-
-	/**
-	 * This methods returns the words already found
-	 * 
-	 * @param context
-	 * @param category
-	 * @return
-	 */
-	public static ArrayList<String> getSolvedWordsForCategory(Context context,
-			Category category) {
-		// query contentprovider and return list
-
-		// get the current countrycode
-		String cc = SettingsActivity.getLanguageToLoad();
-
-		// show the column of words
-		String[] projection = { JumbleWordsTable.WORD };
-		// select the words with the current category and current country code
-		String selection = JumbleWordsTable.CATEGORY + " = ? AND "
-				+ JumbleWordsTable.CC + " = ?";
-		String[] selectionArgs = new String[] { category.getName(context), cc };
-
-		Cursor cursor = context.getContentResolver().query(
-				JumbleProvider.CONTENT_URI_WORDS, projection, selection,
-				selectionArgs, null);
-		ArrayList<String> solvedWords = new ArrayList<String>();
-		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-			ContentValues myRow = new ContentValues();
-			DatabaseUtils.cursorRowToContentValues(cursor, myRow);
-			Log.d(TAG, "Got row: " + myRow.getAsString(JumbleWordsTable.WORD));
-			solvedWords.add(myRow.getAsString(JumbleWordsTable.WORD));
-
-		}
-		cursor.close();
-
-		return solvedWords;
-	}
-
-	/**
-	 * This method gets the list of the easiest words still available
-	 * 
-	 * @param context
-	 * @param words
-	 */
-	public static void removeAllButEasiest(ArrayList<Word> words) {
-		// Whats the easiest?
-		Difficulty easiest = Difficulty.ADVANCED;
-
-		for (Word word : words) {
-			if (word.getLevel().ordinal() < easiest.ordinal()) {
-				easiest = word.getLevel();
-
-			}
-		}
-		Iterator<Word> iterator = words.iterator();
-		while (iterator.hasNext()) {
-			Word word1 = iterator.next();
-			if (word1.getLevel() != easiest) {
-				iterator.remove();
-			}
-		}
-
-	}
-	
-	private int getCountAllButEasiest(ArrayList<Word> words) {
-		
-		//give the easiest level available
-		Difficulty easiest = Difficulty.ADVANCED;
-		int count = 0;
-		for (Word word : words) {
-			if (word.getLevel().ordinal() < easiest.ordinal()) {
-				easiest = word.getLevel();
-			}
-			if(word.getLevel() == easiest) count+=1;
-		}
-
-		
-		return count;
-	}
-
-	/**
-	 * 
-	 * @param words
-	 * @return a random word from the list of the easiest available words
-	 */
-	public static Word getRandomItem(ArrayList<Word> words) {
-
-		if (words.size() < 1)
-			return null;
-		Random myRandom = new Random();
-		int index = myRandom.nextInt(words.size());
-		Word randomWord = words.get(index);
-		words.remove(index);
-
-		return randomWord;
-	}
 
 	/**
 	 * This method creates a log to show on logcat what are the available words
@@ -313,14 +240,6 @@ public class Category {
 		for (Object o : list)
 			listString += o + ",";
 		Log.d(TAG, listString);
-	}
-
-	public static ArrayList<String> getSolvedWordsList(Context context) {
-		if (solved == null) {
-			solved = getSolvedWordsForCategory(context,
-					JumbleActivity.currentCategory);
-		}
-		return solved;
 	}
 
 }

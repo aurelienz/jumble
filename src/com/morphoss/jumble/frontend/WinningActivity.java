@@ -50,6 +50,7 @@ import com.morphoss.jumble.database.JumbleProvider;
 import com.morphoss.jumble.database.JumbleScoresTable;
 import com.morphoss.jumble.database.JumbleWordsTable;
 import com.morphoss.jumble.models.Category;
+import com.morphoss.jumble.models.CategoryWords;
 import com.morphoss.jumble.models.Word;
 
 public class WinningActivity extends BaseActivity {
@@ -321,8 +322,7 @@ public class WinningActivity extends BaseActivity {
 
 		resolver = this.getContentResolver();
 		ContentValues cv = new ContentValues();
-		ArrayList<String> solved = Category
-				.getSolvedWordsList(WinningActivity.this);
+		ArrayList<String> solved = CategoryWords.getSolvedWordsFromCategory(context, JumbleActivity.currentCategory);
 		String action = null;
 		if (solved.contains(word)) {
 			action = "update";
@@ -343,10 +343,10 @@ public class WinningActivity extends BaseActivity {
 
 		Log.d(TAG, action+" the word:" + word + " from category : " + category
 				+ " with cc :" + cc + " with score :" + scoreOfWord
-				+ ".  Database score is now " + getScorefromTable(context, word));
+				+ ".  Database score is now " + CategoryWords.getScorefromTable(context, word));
 	}
 
-	public static ArrayList<Word> removeSolvedFromList(Context context,
+/*	public static ArrayList<Word> removeSolvedFromList(Context context,
 			ArrayList<Word> wordList, ArrayList<String> solvedList) {
 
 		ArrayList<Word> filteredWords = new ArrayList<Word>();
@@ -393,5 +393,5 @@ public class WinningActivity extends BaseActivity {
 			if ( cursor != null ) cursor.close();
 		}
 		return 0;
-	}
+	}*/
 }
