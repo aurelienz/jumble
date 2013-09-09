@@ -20,7 +20,7 @@ package com.morphoss.jumble.database;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class JumbleScoresTable {
+public class JumbleCategoryTable {
 	/**
 	 * This class is a the description of the table called scores
 	 */
@@ -28,18 +28,18 @@ public class JumbleScoresTable {
 	public static final int VERSION = 1;
 
 	// Table name
-	public static final String TABLE = "high_scores";
+	public static final String TABLE = "unlocked_categories";
 
 	// Fields
 	public static final String _ID = "_id";
-	public static final String SCORE = "score";
 	public static final String CATEGORY = "category";
+	public static final String UNLOCK = "unlock";
 	public static final String CC = "cc";
 
 	// SQL to create table
 	public static final String DATABASE_CREATE = "CREATE TABLE if not exists "
 			+ TABLE + " (" + _ID + " integer PRIMARY KEY autoincrement,"
-			+ SCORE + " INTEGER," + CATEGORY + "," + CC + ")";
+			+ CATEGORY + "," + UNLOCK + "," + CC + ")";
 
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(DATABASE_CREATE);

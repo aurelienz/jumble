@@ -13,7 +13,6 @@ import android.util.Log;
 import com.morphoss.jumble.database.JumbleProvider;
 import com.morphoss.jumble.database.JumbleWordsTable;
 import com.morphoss.jumble.frontend.SettingsActivity;
-import com.morphoss.jumble.frontend.WinningActivity;
 
 public class CategoryWords {
 
@@ -67,7 +66,7 @@ public class CategoryWords {
 		// select the words with the current category and current country code
 		String selection = JumbleWordsTable.CATEGORY + " = ? AND "
 				+ JumbleWordsTable.CC + " = ?";
-		String[] selectionArgs = new String[] { category.getName(context), cc };
+		String[] selectionArgs = new String[] { category.getName(), cc };
 
 		Cursor cursor = context.getContentResolver().query(
 				JumbleProvider.CONTENT_URI_WORDS, projection, selection,

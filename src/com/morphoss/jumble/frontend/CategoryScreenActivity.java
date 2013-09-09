@@ -23,7 +23,11 @@ import java.util.Collection;
 
 import org.json.JSONException;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -37,6 +41,8 @@ import android.widget.GridLayout;
 import com.morphoss.jumble.BaseActivity;
 import com.morphoss.jumble.R;
 import com.morphoss.jumble.Util;
+import com.morphoss.jumble.database.JumbleCategoryTable;
+import com.morphoss.jumble.database.JumbleProvider;
 import com.morphoss.jumble.models.Category;
 import com.morphoss.jumble.models.ModelParser;
 
@@ -50,11 +56,27 @@ public class CategoryScreenActivity extends BaseActivity {
 	private static CategoryGridAdapter pga;
 
 	/**
-	 *
+	 * 
 	 * @return the category gridadapter
 	 */
 	public static int getCount() {
 		return pga.getCount();
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main_category);
+		gridLayout = (GridLayout) findViewById(R.id.gridView1);
+		gridLayout.setRowCount(2);
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		int height = displaymetrics.heightPixels;
+		int width = displaymetrics.widthPixels;
+		pga = new CategoryGridAdapter(this, width, height);
+
+		new LoadCategoryTask().execute();
 	}
 
 	@Override
@@ -84,40 +106,25 @@ public class CategoryScreenActivity extends BaseActivity {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
 
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_category);
-		gridLayout = (GridLayout) findViewById(R.id.gridView1);
-		gridLayout.setRowCount(2);
-		DisplayMetrics displaymetrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-		int height = displaymetrics.heightPixels;
-		int width = displaymetrics.widthPixels;
-		pga = new CategoryGridAdapter(this, width, height);
-
-    	new LoadCategoryTask().execute();
-
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch ( item.getItemId() ) {
-            case android.R.id.home:
-
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-	private class LoadCategoryTask extends AsyncTask<Void, Void, Collection<Category>> {
+	private class LoadCategoryTask extends
+			AsyncTask<Void, Void, Collection<Category>> {
 
 		@Override
 		protected Collection<Category> doInBackground(Void... params) {
 
-			File file = new File(Util.createInternalStorage(CategoryScreenActivity.this) + File.separator
-					+ "words.json");
+			File file = new File(
+					Util.createInternalStorage(CategoryScreenActivity.this)
+							+ File.separator + "words.json");
 
 			try {
 				String json = Util.getStringFromFile(file);
@@ -138,41 +145,37 @@ public class CategoryScreenActivity extends BaseActivity {
 		@Override
 		public void onPostExecute(Collection<Category> result) {
 			if (result == null) {
-			    Log.e(TAG,"Could not load categories!!!!!");
-			    finish();
-			    return;
+				Log.e(TAG, "Could not load categories!!!!!");
+				finish();
+				return;
 			}
 
 			try {
-                pga.setCategories(result);
-                gridLayout.removeAllViews();
-                for (int i = 0; i < pga.getCount(); i++) {
-                	final int num = i;
-                	View v = pga.getView(i, null, null);
-                	gridLayout.addView(v, i);
-                	pga.setLayout(v);
-                	if (MainActivity.scoreTotal >= CategoryGridAdapter.getCategory(i).getMinScore()) {
-                		if (MainActivity.scoreTotal == CategoryGridAdapter.getCategory(i).getMinScore()) {
-                			Log.d(TAG, "a category is unlocked");
-                		}
-                		v.setOnClickListener(new OnClickListener() {
-                			public void onClick(View v) {
-                				Intent intent = new Intent( CategoryScreenActivity.this, JumbleActivity.class);
-                				intent.putExtra(JumbleActivity.CATEGORY_KEY, num);
-                				intent.putExtra(WinningActivity.AVATAR_ID, AvatarActivity.id);
-                				startActivity(intent);
-                				finish();
-                			}
-                		});
-                	}
+				pga.setCategories(result);
+				gridLayout.removeAllViews();
+				for (int i = 0; i < pga.getCount(); i++) {
+					final int num = i;
+					View v = pga.getView(i, null, null);
+					gridLayout.addView(v, i);
+					pga.setLayout(v);
+					v.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
+							Intent intent = new Intent(
+									CategoryScreenActivity.this,
+									JumbleActivity.class);
+							intent.putExtra(JumbleActivity.CATEGORY_KEY, num);
+							intent.putExtra(WinningActivity.AVATAR_ID,
+									AvatarActivity.id);
+							startActivity(intent);
+							finish();
+						}
+					});
 
-                }
-            }
-            catch ( Exception e ) {
-                Log.w( TAG, "Exception", e );
-            }
+				}
+			} catch (Exception e) {
+				Log.w(TAG, "Exception", e);
+			}
 		}
-
 	}
 
 }
