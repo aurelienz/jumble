@@ -103,7 +103,7 @@ public class JumbleActivity extends BaseActivity {
 						CategoryGridAdapter.getCategory(categoryIndex)
 								.getName())) {
 			currentCategory = CategoryGridAdapter.getCategory(categoryIndex);
-			currentCategory.getNewWords(this);
+			currentCategory.getNextWord(this);
 		}
 	
 		touchListener = new MyTouchListener();

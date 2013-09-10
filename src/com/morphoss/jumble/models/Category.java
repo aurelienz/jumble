@@ -34,6 +34,7 @@ import android.util.Log;
 import com.morphoss.jumble.Util;
 import com.morphoss.jumble.database.JumbleCategoryTable;
 import com.morphoss.jumble.database.JumbleProvider;
+import com.morphoss.jumble.frontend.CategoryGridAdapter;
 import com.morphoss.jumble.frontend.CategoryScreenActivity;
 import com.morphoss.jumble.frontend.SettingsActivity;
 
@@ -138,7 +139,7 @@ public class Category {
 	public String getLocalisedName() {
 		String cc = SettingsActivity.getLanguageToLoad();
 
-		Log.d(TAG, "Current CC is " + cc);
+		//Log.d(TAG, "Current CC is " + cc);
 		if (names.containsKey(cc)) {
 			return names.get(cc);
 		}
@@ -161,34 +162,28 @@ public class Category {
 	 */
 	public Word getNextWord(Context context) {
 	
-		solved = CategoryWords.getSolvedWordsFromCategory(context, this);
-		printWordList("All Solved Words", solved);
-		double ratioSolved = (solved.size() / words.size());
-
-		if (!unlocked() && ratioSolved >= 0.05) {
-			ContentValues cv = new ContentValues();
-			cv.put(JumbleCategoryTable.UNLOCK, true);
-			cv.put(JumbleCategoryTable.CATEGORY, getLocalisedName());
-			context.getContentResolver().insert(
-					JumbleProvider.CONTENT_URI_CATEGORIES, cv);
-			setUnlocked(true);
-		}
-		Word word = CategoryWords.getRandomItem(testWords);
-
-		return word;
-	}
-
-	public void getNewWords(Context context) {
 		ArrayList<Word> tempWords = this.words;
-
+		printWordList("All Available Words", tempWords);
 		tempWords = CategoryWords.getLocalisedWordsFromCategory(tempWords);
 		printWordList("All Localised Available Words", tempWords);
 		solved = CategoryWords.getSolvedWordsFromCategory(context, this);
 		printWordList("All Solved Words", solved);
-		double ratioSolved = (solved.size() / tempWords.size());
+		double ratioSolved = (double)solved.size()/(double)words.size();
+		Log.d(TAG, "size of solved list : "+solved.size());
+		Log.d(TAG, "size of words list : "+words.size());
+		Log.d(TAG, "ratio solved : "+ratioSolved);
+		Category nextCategory = CategoryGridAdapter.getCategory(getId());
+		Log.d(TAG, "next category name : "+nextCategory.getLocalisedName());
+		if (!nextCategory.unlocked() && ratioSolved >= 0.05) {
+			Log.d(TAG, "unlocking a new category");
+			ContentValues cv = new ContentValues();
+			cv.put(JumbleCategoryTable.UNLOCK, "1");
+			cv.put(JumbleCategoryTable.CATEGORY, nextCategory.getLocalisedName());
+			context.getContentResolver().insert(
+					JumbleProvider.CONTENT_URI_CATEGORIES, cv);
+			nextCategory.setUnlocked(true);
+		}
 		tempWords = CategoryWords.removeSolvedFromList(context, tempWords, solved);
-		printWordList("All Available Words", tempWords);
-
 		wordsEasy = CategoryWords.getWordsByDifficulty(tempWords, Difficulty.EASY);
 		printWordList("All Easy Available Words", wordsEasy);
 		wordsMedium = CategoryWords.getWordsByDifficulty(tempWords,
@@ -220,10 +215,12 @@ public class Category {
 		} else if (countEasyWords == 00 && countMediumWords <= 5) {
 			filteredwords.addAll(wordsAdvanced);
 		} else {
-			filteredwords = tempWords;
 			CategoryWords.removeAllButEasiest(filteredwords);
 		}
-		testWords = filteredwords;
+
+		Word word = CategoryWords.getRandomItem(filteredwords);
+
+		return word;
 	}
 
 	/**

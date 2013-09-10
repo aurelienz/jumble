@@ -158,18 +158,21 @@ public class CategoryScreenActivity extends BaseActivity {
 					View v = pga.getView(i, null, null);
 					gridLayout.addView(v, i);
 					pga.setLayout(v);
-					v.setOnClickListener(new OnClickListener() {
-						public void onClick(View v) {
-							Intent intent = new Intent(
-									CategoryScreenActivity.this,
-									JumbleActivity.class);
-							intent.putExtra(JumbleActivity.CATEGORY_KEY, num);
-							intent.putExtra(WinningActivity.AVATAR_ID,
-									AvatarActivity.id);
-							startActivity(intent);
-							finish();
-						}
-					});
+					if (CategoryGridAdapter.getCategory(i).unlocked()) {
+						v.setOnClickListener(new OnClickListener() {
+							public void onClick(View v) {
+								Intent intent = new Intent(
+										CategoryScreenActivity.this,
+										JumbleActivity.class);
+								intent.putExtra(JumbleActivity.CATEGORY_KEY,
+										num);
+								intent.putExtra(WinningActivity.AVATAR_ID,
+										AvatarActivity.id);
+								startActivity(intent);
+								finish();
+							}
+						});
+					}
 
 				}
 			} catch (Exception e) {

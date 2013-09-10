@@ -90,17 +90,11 @@ public class CategoryWords {
 
 		ArrayList<Word> filteredWords = new ArrayList<Word>();
 
-		// if the score of the word is over 2000 remove from the list
 		for (Word word : wordList) {
 
 			if (!solvedList.contains(word.getNameKey())) {
 				filteredWords.add(word);
 
-			} else {
-				int score = getScorefromTable(context, word.getNameKey());
-				if (score < 2000) {
-					filteredWords.add(word);
-				}
 			}
 		}
 		return filteredWords;

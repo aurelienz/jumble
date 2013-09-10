@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
     name="jumble"
-    basedir="."
-    default="zip" >
+    basedir="." >
+
     <property
         name="jumble"
         value="${ant.jumble}" />
+
     <property
         name="database"
         value="words/database" />
+
     <property
         name="assets"
         value="assets" />
-    <target name="cleanzip">
+
+    <target name="cleanzip" >
+
         <delete file="assets/database.zip" />
     </target>
+
     <target name="makezip" >
+
         <zip
             basedir="${database}"
             destfile="assets/database.zip"
             excludes="dont*.*" />
     </target>
-    <target name="-pre-clean" depends="cleanzip" />
-    <target name="-pre-build" depends="makezip" />
+
+    <target
+        name="-pre-clean"
+        depends="cleanzip" />
+
+    <target
+        name="-pre-build"
+        depends="makezip" />
+
 </project>

@@ -108,8 +108,8 @@ public class CategoryGridAdapter extends BaseAdapter {
 		Cursor cursor = resolver
 				.query(JumbleProvider.CONTENT_URI_CATEGORIES,
 						new String[] { JumbleCategoryTable.CATEGORY },
-						JumbleCategoryTable.UNLOCK + " = ?",
-						new String[] { "1" }, null);
+						JumbleCategoryTable.UNLOCK + " = '1'",
+						null, null);
 		try {
 			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
 					.moveToNext()) {
@@ -127,7 +127,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 		for (int i = 0; i < categories.size(); i++) {
 			cat = categories.get(i);
 			Log.d(TAG, "category label :" + cat.getLocalisedName());
-			if (i == 0 || unlockedSet.contains(cat.getLocalisedName())) {
+			if( i == 0 || unlockedSet.contains(cat.getLocalisedName())) {
 				cat.setUnlocked(true);
 			}
 		}
