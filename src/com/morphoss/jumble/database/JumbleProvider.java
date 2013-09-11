@@ -161,10 +161,14 @@ public class JumbleProvider extends ContentProvider {
 			getContext().getContentResolver().notifyChange(uri, null);
 			return deleteCount;
 		case ALL_WORDS:
-			Log.d(TAG, "delete all the words of the database");
+			Log.d(TAG, "delete all the wordsfrom the database");
 			getContext().getContentResolver().notifyChange(uri, null);
 			return deleteCount;
 
+		case ALL_CATEGORIES:
+			Log.d(TAG, "delete all the unlocked categories from the database");
+			getContext().getContentResolver().notifyChange(uri, null);
+			return deleteCount2;
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}

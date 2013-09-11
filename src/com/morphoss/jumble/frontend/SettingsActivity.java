@@ -83,6 +83,11 @@ public class SettingsActivity extends BaseActivity {
 		resolver = this.getContentResolver();
 		resolver.delete(JumbleProvider.CONTENT_URI_WORDS, null, null);
 	}
+	private void deleteKnownCategories() {
+		Log.d(TAG, "the unlocked categories have been deleted");
+		resolver = this.getContentResolver();
+		resolver.delete(JumbleProvider.CONTENT_URI_CATEGORIES, null, null);
+	}
 
 	@Override
 	protected void onStart() {
@@ -128,6 +133,7 @@ public class SettingsActivity extends BaseActivity {
 				public void onClick(View v) {
 
 					deleteWords();
+					deleteKnownCategories();
 
 				}
 			});

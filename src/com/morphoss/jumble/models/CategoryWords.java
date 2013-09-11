@@ -100,6 +100,26 @@ public class CategoryWords {
 		return filteredWords;
 	}
 
+	public static ArrayList<Word> removeKnownWordsFromList(Context context,
+			ArrayList<Word> wordList, ArrayList<String> solvedList) {
+
+		ArrayList<Word> filteredWords = new ArrayList<Word>();
+
+		for (Word word : wordList) {
+
+			if (!solvedList.contains(word.getNameKey())) {
+				filteredWords.add(word);
+			} else {
+				int score = getScorefromTable(context, word.getNameKey());
+				if (score < 2000) {
+					filteredWords.add(word);
+				}
+
+			}
+		}
+		return filteredWords;
+	}
+
 	public static int getScorefromTable(Context context, String word) {
 		// get the score of the current word
 		String[] projection = { JumbleWordsTable.SCORE };
@@ -178,7 +198,8 @@ public class CategoryWords {
 		return count;
 	}
 
-	public static int getCountAllByDifficulty(ArrayList<Word> words, Difficulty diff) {
+	public static int getCountAllByDifficulty(ArrayList<Word> words,
+			Difficulty diff) {
 
 		int count = 0;
 		for (Word word : words) {

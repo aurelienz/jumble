@@ -51,7 +51,6 @@ public class Category {
 	private String imagePath;
 	private boolean unlocked = false;
 	private ArrayList<Word> words = new ArrayList<Word>();
-	private ArrayList<Word> testWords = new ArrayList<Word>();
 	private ArrayList<String> solved = new ArrayList<String>();
 	private ArrayList<Word> wordsEasy = new ArrayList<Word>();
 	private ArrayList<Word> wordsMedium = new ArrayList<Word>();
@@ -139,7 +138,7 @@ public class Category {
 	public String getLocalisedName() {
 		String cc = SettingsActivity.getLanguageToLoad();
 
-		//Log.d(TAG, "Current CC is " + cc);
+		// Log.d(TAG, "Current CC is " + cc);
 		if (names.containsKey(cc)) {
 			return names.get(cc);
 		}
@@ -160,36 +159,34 @@ public class Category {
 	 *            required to work
 	 * @return the next word of the available ones
 	 */
-	public Word getNextWord(Context context) {
-	
-		ArrayList<Word> tempWords = this.words;
-		printWordList("All Available Words", tempWords);
-		tempWords = CategoryWords.getLocalisedWordsFromCategory(tempWords);
-		printWordList("All Localised Available Words", tempWords);
+	public Word getNextWord(Context context, ArrayList<Word> filteredWords) {
+
 		solved = CategoryWords.getSolvedWordsFromCategory(context, this);
-		printWordList("All Solved Words", solved);
-		double ratioSolved = (double)solved.size()/(double)words.size();
-		Log.d(TAG, "size of solved list : "+solved.size());
-		Log.d(TAG, "size of words list : "+words.size());
-		Log.d(TAG, "ratio solved : "+ratioSolved);
+		double ratioSolved = (double) solved.size() / (double) words.size();
+		Log.d(TAG, "size of solved list : " + solved.size());
+		Log.d(TAG, "size of words list : " + words.size());
+		Log.d(TAG, "ratio solved : " + ratioSolved);
 		Category nextCategory = CategoryGridAdapter.getCategory(getId());
-		Log.d(TAG, "next category name : "+nextCategory.getLocalisedName());
+		Log.d(TAG, "next category name : " + nextCategory.getLocalisedName());
 		if (!nextCategory.unlocked() && ratioSolved >= 0.05) {
 			Log.d(TAG, "unlocking a new category");
 			ContentValues cv = new ContentValues();
 			cv.put(JumbleCategoryTable.UNLOCK, "1");
-			cv.put(JumbleCategoryTable.CATEGORY, nextCategory.getLocalisedName());
+			cv.put(JumbleCategoryTable.CATEGORY,
+					nextCategory.getLocalisedName());
 			context.getContentResolver().insert(
 					JumbleProvider.CONTENT_URI_CATEGORIES, cv);
 			nextCategory.setUnlocked(true);
 		}
-		tempWords = CategoryWords.removeSolvedFromList(context, tempWords, solved);
-		wordsEasy = CategoryWords.getWordsByDifficulty(tempWords, Difficulty.EASY);
+		filteredWords = CategoryWords.removeSolvedFromList(context, filteredWords,
+				solved);
+		wordsEasy = CategoryWords.getWordsByDifficulty(filteredWords,
+				Difficulty.EASY);
 		printWordList("All Easy Available Words", wordsEasy);
-		wordsMedium = CategoryWords.getWordsByDifficulty(tempWords,
+		wordsMedium = CategoryWords.getWordsByDifficulty(filteredWords,
 				Difficulty.MEDIUM);
 		printWordList("All Medium Available Words", wordsMedium);
-		wordsAdvanced = CategoryWords.getWordsByDifficulty(tempWords,
+		wordsAdvanced = CategoryWords.getWordsByDifficulty(filteredWords,
 				Difficulty.ADVANCED);
 		printWordList("All Advanced Available Words", wordsAdvanced);
 
@@ -203,7 +200,8 @@ public class Category {
 				wordsAdvanced, Difficulty.ADVANCED);
 		Log.d(TAG, "count of advanced words :" + countAdvancedWords);
 
-		int countEasiestWords = CategoryWords.getCountAllButEasiest(tempWords);
+		int countEasiestWords = CategoryWords
+				.getCountAllButEasiest(filteredWords);
 		Log.d(TAG, "count of easiest words :" + countEasiestWords);
 
 		ArrayList<Word> filteredwords = new ArrayList<Word>();
@@ -221,6 +219,16 @@ public class Category {
 		Word word = CategoryWords.getRandomItem(filteredwords);
 
 		return word;
+	}
+
+	public ArrayList<Word> getNewWords(Context context) {
+
+		ArrayList<Word> tempWords = this.words;
+		tempWords = CategoryWords.getLocalisedWordsFromCategory(tempWords);
+		solved = CategoryWords.getSolvedWordsFromCategory(context, this);
+		tempWords = CategoryWords.removeKnownWordsFromList(context, tempWords,
+				solved);
+		return tempWords;
 	}
 
 	/**
