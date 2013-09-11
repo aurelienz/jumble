@@ -103,7 +103,7 @@ public class JumbleActivity extends BaseActivity {
 						CategoryGridAdapter.getCategory(categoryIndex)
 								.getName())) {
 			currentCategory = CategoryGridAdapter.getCategory(categoryIndex);
-			currentCategory.getNextWord(this, currentCategory.getNewWords(this));
+			currentCategory.getNewWords(this);
 		}
 	
 		touchListener = new MyTouchListener();
@@ -122,7 +122,7 @@ public class JumbleActivity extends BaseActivity {
 			}
 		});
 
-		Word w= currentCategory.getNextWord(this, currentCategory.getNewWords(this));
+		Word w= currentCategory.getNextWord(this);
 		if ( w == null) {
 			currentCategory = null;
 			Log.d(TAG, "we shouldn't be here!!!!!");
@@ -363,19 +363,19 @@ public class JumbleActivity extends BaseActivity {
 
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == WinningActivity.RESULT_RETURN_CATEGORY) {
+			currentCategory = null;
 			finish();
-			Intent intent = new Intent();
-			intent.setClass(JumbleActivity.this, CategoryScreenActivity.class);
-			startActivity(intent);
 		} else if (resultCode == WinningActivity.RESULT_RETURN_HOME) {
+			currentCategory = null;
 			finish();
 			Intent intent = new Intent();
 			intent.setClass(JumbleActivity.this, MainActivity.class);
 			startActivity(intent);
 		} else {
-			Word w = currentCategory.getNextWord(this, currentCategory.getNewWords(this));
+			Word w = currentCategory.getNextWord(this);
 			if (w == null) {
 				startVideo();
+				currentCategory = null;
 			} else {
 				startNewWord(w);
 			}

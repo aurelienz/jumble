@@ -159,11 +159,11 @@ public class Category {
 	 *            required to work
 	 * @return the next word of the available ones
 	 */
-	public Word getNextWord(Context context, ArrayList<Word> filteredWords) {
+	public Word getNextWord(Context context) {
 
-		solved = CategoryWords.getSolvedWordsFromCategory(context, this);
-		double ratioSolved = (double) solved.size() / (double) words.size();
-		Log.d(TAG, "size of solved list : " + solved.size());
+		ArrayList<String> tempsolved = CategoryWords.getSolvedWordsFromCategory(context, this);
+		double ratioSolved = (double) tempsolved.size() / (double) words.size();
+		Log.d(TAG, "size of solved list : " + tempsolved.size());
 		Log.d(TAG, "size of words list : " + words.size());
 		Log.d(TAG, "ratio solved : " + ratioSolved);
 		Category nextCategory = CategoryGridAdapter.getCategory(getId());
@@ -178,57 +178,64 @@ public class Category {
 					JumbleProvider.CONTENT_URI_CATEGORIES, cv);
 			nextCategory.setUnlocked(true);
 		}
-		filteredWords = CategoryWords.removeSolvedFromList(context, filteredWords,
-				solved);
-		wordsEasy = CategoryWords.getWordsByDifficulty(filteredWords,
-				Difficulty.EASY);
-		printWordList("All Easy Available Words", wordsEasy);
-		wordsMedium = CategoryWords.getWordsByDifficulty(filteredWords,
-				Difficulty.MEDIUM);
-		printWordList("All Medium Available Words", wordsMedium);
-		wordsAdvanced = CategoryWords.getWordsByDifficulty(filteredWords,
-				Difficulty.ADVANCED);
-		printWordList("All Advanced Available Words", wordsAdvanced);
 
-		int countEasyWords = CategoryWords.getCountAllByDifficulty(wordsEasy,
-				Difficulty.EASY);
+		int countEasyWords = wordsEasy.size();
 		Log.d(TAG, "count of easy words :" + countEasyWords);
-		int countMediumWords = CategoryWords.getCountAllByDifficulty(
-				wordsMedium, Difficulty.MEDIUM);
+		int countMediumWords = wordsMedium.size();
 		Log.d(TAG, "count of medium words :" + countMediumWords);
-		int countAdvancedWords = CategoryWords.getCountAllByDifficulty(
-				wordsAdvanced, Difficulty.ADVANCED);
+		int countAdvancedWords = wordsAdvanced.size();
 		Log.d(TAG, "count of advanced words :" + countAdvancedWords);
 
-		int countEasiestWords = CategoryWords
-				.getCountAllButEasiest(filteredWords);
-		Log.d(TAG, "count of easiest words :" + countEasiestWords);
-
 		ArrayList<Word> filteredwords = new ArrayList<Word>();
-		if (countEasyWords > 5) {
-			filteredwords = wordsEasy;
-		} else if (countMediumWords != 0 && countEasyWords <= 5) {
-			filteredwords.addAll(wordsEasy);
-			filteredwords.addAll(wordsMedium);
-		} else if (countEasyWords == 00 && countMediumWords <= 5) {
-			filteredwords.addAll(wordsAdvanced);
-		} else {
-			CategoryWords.removeAllButEasiest(filteredwords);
-		}
+		filteredwords.addAll(wordsEasy);
+		if (filteredwords.size() < 3) filteredwords.addAll(wordsMedium);
+		if (filteredwords.size() < 3) filteredwords.addAll(wordsAdvanced);
+		if (filteredwords.size() == 0 ) return null;
 
 		Word word = CategoryWords.getRandomItem(filteredwords);
-
+		ArrayList<Word> wordList;
+		Log.d(TAG, "the random word is : "+word.getLocalisedWord()+" with level :"+word.getLevel());
+		switch(word.getLevel()){
+		case EASY:
+			wordList = wordsEasy;
+			break;
+		case MEDIUM:
+			wordList = wordsMedium;
+			break;
+		case ADVANCED:
+			wordList = wordsAdvanced;
+			break;
+		default:
+			wordList = wordsAdvanced;
+			break;
+		}
+		for(int i=0; i<wordList.size(); i++){
+			if(wordList.get(i).equals(word)){
+				wordList.remove(i);
+				break;
+			}
+		}
 		return word;
 	}
 
-	public ArrayList<Word> getNewWords(Context context) {
+	public void getNewWords(Context context) {
 
 		ArrayList<Word> tempWords = this.words;
 		tempWords = CategoryWords.getLocalisedWordsFromCategory(tempWords);
 		solved = CategoryWords.getSolvedWordsFromCategory(context, this);
 		tempWords = CategoryWords.removeKnownWordsFromList(context, tempWords,
 				solved);
-		return tempWords;
+		wordsEasy = CategoryWords.getWordsByDifficulty(tempWords,
+				Difficulty.EASY);
+		printWordList("All Easy Available Words", wordsEasy);
+		wordsMedium = CategoryWords.getWordsByDifficulty(tempWords,
+				Difficulty.MEDIUM);
+		printWordList("All Medium Available Words", wordsMedium);
+		wordsAdvanced = CategoryWords.getWordsByDifficulty(tempWords,
+				Difficulty.ADVANCED);
+		printWordList("All Advanced Available Words", wordsAdvanced);
+
+
 	}
 
 	/**
@@ -237,7 +244,7 @@ public class Category {
 	 * @param message
 	 * @param list
 	 */
-	public void printWordList(String message, ArrayList<?> list) {
+	public static void printWordList(String message, ArrayList<?> list) {
 		// log message displaying all the elements of list
 		Log.d(TAG, message);
 		String listString = "";

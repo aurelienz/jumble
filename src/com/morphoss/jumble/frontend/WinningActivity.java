@@ -176,8 +176,7 @@ public class WinningActivity extends BaseActivity {
 		JumbleActivity.numberMoves = 0;
 		myApp.resumeMusic();
 		/*for (int i = 0; i < CategoryScreenActivity.getCount(); i++) {
-			if (MainActivity.scoreTotal == CategoryGridAdapter.getCategory(i)
-					.getMinScore()) {
+			if () {
 				newLevel = true;
 			}
 		}*/
