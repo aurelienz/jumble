@@ -112,8 +112,8 @@ public class CategoryScreenActivity extends BaseActivity {
 			@Override
 			public void run() {
 				// Show the popup window of an unlocked level after 0.5s = 500ms
-				if (pga.newLevel) {
-					PopupWindowLevel();
+				if(!Category.unlockedCategories.isEmpty()){
+				PopupWindowLevel();
 				}
 
 			}
@@ -146,7 +146,7 @@ public class CategoryScreenActivity extends BaseActivity {
 
 	private final OnClickListener cancel_popup_level = new OnClickListener() {
 		public void onClick(View v) {
-			pga.newLevel = false;
+			Category.unlockedCategories.clear();
 			pwindowLevel.dismiss();
 
 		}

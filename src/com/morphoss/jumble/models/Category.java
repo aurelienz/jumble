@@ -44,7 +44,7 @@ public class Category {
 	 * This class sets all the details about the a Category type
 	 */
 	public static String TAG = "Category";
-
+	public static ArrayList<String> unlockedCategories = new ArrayList<String>();
 	private int id;
 	private HashMap<String, String> names;
 	private static final String defaultCC = "en";
@@ -170,6 +170,7 @@ public class Category {
 		Log.d(TAG, "next category name : " + nextCategory.getLocalisedName());
 		if (!nextCategory.unlocked() && ratioSolved >= 0.2) {
 			Log.d(TAG, "unlocking a new category");
+			unlockedCategories.add(nextCategory.getLocalisedName());
 			ContentValues cv = new ContentValues();
 			cv.put(JumbleCategoryTable.UNLOCK, "1");
 			cv.put(JumbleCategoryTable.CATEGORY,

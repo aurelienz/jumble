@@ -53,8 +53,8 @@ public class CategoryGridAdapter extends BaseAdapter {
 	private static ImageView categoryImage;
 	private static TextView categoryLabel;
 	private Category category;
-	public static boolean newLevel = false;
 	private static final String TAG = "CategoryGridAdapter";
+	
 
 	public CategoryGridAdapter(Context context, int width, int height) {
 		super();
@@ -82,11 +82,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 		if (category.unlocked()) {
 			categoryImage.setImageDrawable(category.getImage(context));
 		}
-		for(int i=1; i<categories.size(); i++){
-			if(categories.get(i).unlocked()){
-				newLevel = true;
-			}
-		}
+
 		categoryLayout.setTag(category.getId());
 		categoryLabel.setText(category.getLocalisedName());
 		return categoryLayout;
