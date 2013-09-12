@@ -168,7 +168,7 @@ public class Category {
 		Log.d(TAG, "ratio solved : " + ratioSolved);
 		Category nextCategory = CategoryGridAdapter.getCategory(getId());
 		Log.d(TAG, "next category name : " + nextCategory.getLocalisedName());
-		if (!nextCategory.unlocked() && ratioSolved >= 0.05) {
+		if (!nextCategory.unlocked() && ratioSolved >= 0.2) {
 			Log.d(TAG, "unlocking a new category");
 			ContentValues cv = new ContentValues();
 			cv.put(JumbleCategoryTable.UNLOCK, "1");

@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.morphoss.jumble.BaseActivity;
 import com.morphoss.jumble.R;
@@ -33,6 +34,8 @@ public class ResultsActivity extends BaseActivity {
 	 * unlock new levels
 	 */
 	private static final String TAG = "ResultsActivity";
+	private ResultsGridAdapter rga;
+	LinearLayout myGallery;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,13 @@ public class ResultsActivity extends BaseActivity {
 
 		TextView textBestScore = (TextView) findViewById(R.id.score_best);
 		textBestScore.setText("" + MainActivity.scoreTotal);
+		myGallery = (LinearLayout) findViewById(R.id.galleryCategories);
+		myGallery.removeAllViews();
+		rga = new ResultsGridAdapter(this);
+		for (int i = 0; i < rga.getCount(); i++) {
+			myGallery.addView(rga.getView(i, null, myGallery));
+
+		}
 
 	}
 

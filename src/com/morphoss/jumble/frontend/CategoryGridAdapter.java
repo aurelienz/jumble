@@ -45,7 +45,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 	 * This class is an adapter for the category gridview
 	 */
 	private final Context context;
-	private static ArrayList<Category> categories = null;;
+	private static ArrayList<Category> categories = null;
 	private int buttonWidth;
 	private int buttonHeight;
 	private final int width;

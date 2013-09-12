@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Jumble</string>
     <string name="loading">Loading...</string>
     <string name="text_button_play">Play</string>
@@ -39,4 +40,6 @@
     <string name="score_clothes">You need to have 8000 points to unlock the category: Clothes</string>
     <string name="score_health">You need to have 12000 points to unlock the category: Health</string>
     <string name="score_sports">You need to have 16000 points to unlock the category: Sports</string>
+    <string name="unlockNewLevel">To unlock a new level, you have to solve more than 20% of the words of the previous category</string>
+
 </resources>
