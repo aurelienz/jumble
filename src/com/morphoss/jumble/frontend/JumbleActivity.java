@@ -365,6 +365,9 @@ public class JumbleActivity extends BaseActivity {
 		if (resultCode == WinningActivity.RESULT_RETURN_CATEGORY) {
 			currentCategory = null;
 			finish();
+			Intent intent = new Intent();
+			intent.setClass(JumbleActivity.this, CategoryScreenActivity.class);
+			startActivity(intent);
 		} else if (resultCode == WinningActivity.RESULT_RETURN_HOME) {
 			currentCategory = null;
 			finish();

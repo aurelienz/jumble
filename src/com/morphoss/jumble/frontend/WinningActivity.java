@@ -67,9 +67,7 @@ public class WinningActivity extends BaseActivity {
 	public static final String AVATAR_ID = "avatar id";
 	public static ContentResolver resolver;
 	public static int scoreWord = 0;
-	private PopupWindow pwindowLevel;
-	private ImageView btnClosePopupLevel;
-	private boolean newLevel = false;
+
 	public static int scoreDatabase = 100;
 
 	@Override
@@ -88,7 +86,6 @@ public class WinningActivity extends BaseActivity {
 			findViewById(R.id.nextWord).setVisibility(View.INVISIBLE);
 		findViewById(R.id.nextWord).setVisibility(View.VISIBLE);
 		int avatarID = extras.getInt(AVATAR_ID);
-		//insertScore(scoreWord,JumbleActivity.currentCategory.getLocalisedName(this),SettingsActivity.getLanguageToLoad());
 		setAvatar(avatarID);
 		MainActivity.scoreTotal += scoreWord;
 		Log.d(TAG, "total score :" + MainActivity.scoreTotal);
@@ -175,55 +172,9 @@ public class WinningActivity extends BaseActivity {
 		super.onResume();
 		JumbleActivity.numberMoves = 0;
 		myApp.resumeMusic();
-		/*for (int i = 0; i < CategoryScreenActivity.getCount(); i++) {
-			if () {
-				newLevel = true;
-			}
-		}*/
-		final Handler handler = new Handler();
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				// Show the popup window of an unlocked level after 0.5s = 500ms
-				if (newLevel) {
-					PopupWindowLevel();
-				}
 
-			}
-		}, 500);
 	}
 
-	/**
-	 * This method creates a popup window when a level is unlocked
-	 */
-	public void PopupWindowLevel() {
-
-		try {
-
-			LayoutInflater inflater = (LayoutInflater) WinningActivity.this
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View layout = inflater.inflate(R.layout.popup_level,
-					(ViewGroup) findViewById(R.id.popup_element));
-			DisplayMetrics metrics = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			pwindowLevel = new PopupWindow(layout, metrics.widthPixels,
-					metrics.heightPixels, true);
-			pwindowLevel.showAtLocation(layout, Gravity.CENTER, 0, 0);
-			btnClosePopupLevel = (ImageView) layout
-					.findViewById(R.id.btn_close_popup);
-			btnClosePopupLevel.setOnClickListener(cancel_popup_level);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private final OnClickListener cancel_popup_level = new OnClickListener() {
-		public void onClick(View v) {
-			newLevel = false;
-			pwindowLevel.dismiss();
-
-		}
-	};
 
 	@Override
 	protected void onStart() {

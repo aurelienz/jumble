@@ -25,18 +25,25 @@ import org.json.JSONException;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 
 import com.morphoss.jumble.BaseActivity;
 import com.morphoss.jumble.R;
@@ -54,6 +61,9 @@ public class CategoryScreenActivity extends BaseActivity {
 	private static final String TAG = "CategoryActivity";
 	private GridLayout gridLayout;
 	private static CategoryGridAdapter pga;
+	private PopupWindow pwindowLevel;
+	private ImageView btnClosePopupLevel;
+	
 
 	/**
 	 * 
@@ -97,8 +107,50 @@ public class CategoryScreenActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		myApp.resumeMusic();
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// Show the popup window of an unlocked level after 0.5s = 500ms
+				if (pga.newLevel) {
+					PopupWindowLevel();
+				}
+
+			}
+		}, 500);
 	}
 
+	/**
+	 * This method creates a popup window when a level is unlocked
+	 */
+	public void PopupWindowLevel() {
+
+		try {
+
+			LayoutInflater inflater = (LayoutInflater) CategoryScreenActivity.this
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View layout = inflater.inflate(R.layout.popup_level,
+					(ViewGroup) findViewById(R.id.popup_element));
+			DisplayMetrics metrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			pwindowLevel = new PopupWindow(layout, metrics.widthPixels,
+					metrics.heightPixels, true);
+			pwindowLevel.showAtLocation(layout, Gravity.CENTER, 0, 0);
+			btnClosePopupLevel = (ImageView) layout
+					.findViewById(R.id.btn_close_popup);
+			btnClosePopupLevel.setOnClickListener(cancel_popup_level);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private final OnClickListener cancel_popup_level = new OnClickListener() {
+		public void onClick(View v) {
+			pga.newLevel = false;
+			pwindowLevel.dismiss();
+
+		}
+	};
 	@Override
 	protected void onStart() {
 		super.onStart();
