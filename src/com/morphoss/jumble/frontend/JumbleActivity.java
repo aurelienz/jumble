@@ -99,9 +99,9 @@ public class JumbleActivity extends BaseActivity {
 		Bundle b = getIntent().getExtras();
 		int categoryIndex = b.getInt(CATEGORY_KEY);
 		if (currentCategory == null
-				|| !currentCategory.getName().equals(
+				|| !currentCategory.getLocalisedName().equals(
 						CategoryGridAdapter.getCategory(categoryIndex)
-								.getName())) {
+								.getLocalisedName())) {
 			currentCategory = CategoryGridAdapter.getCategory(categoryIndex);
 			currentCategory.getNewWords(this);
 		}

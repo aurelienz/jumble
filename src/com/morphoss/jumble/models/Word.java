@@ -50,6 +50,11 @@ public class Word implements Parcelable {
 	public BitmapDrawable getImage(Context context) {
 		return Util.getImage(context, imagePath);
 	}
+	
+	public String getLocalisedName(){
+		if(currentLoc == null) setlocalisation();
+		return currentLoc.getLocalisedWord();
+	}
 
 	public Difficulty getLevel(){
 		if(currentLoc == null) setlocalisation();
@@ -60,6 +65,7 @@ public class Word implements Parcelable {
 		if(currentLoc == null) setlocalisation();
 		return currentLoc.getLocalisedSoundPath();
 	}
+
 	private Word(String word, JSONObject data) throws JSONException {
 		this.nameKey = word;
 		this.imagePath = data.getString("image");

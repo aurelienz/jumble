@@ -145,9 +145,6 @@ public class Category {
 		return names.get(defaultCC);
 	}
 
-	public String getName() {
-		return names.get(defaultCC);
-	}
 
 	public int size() {
 		return words.size();

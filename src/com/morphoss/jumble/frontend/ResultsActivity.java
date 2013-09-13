@@ -17,15 +17,27 @@
  */
 package com.morphoss.jumble.frontend;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+
+import org.json.JSONException;
+
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.morphoss.jumble.BaseActivity;
 import com.morphoss.jumble.R;
+import com.morphoss.jumble.Util;
+import com.morphoss.jumble.models.Category;
+import com.morphoss.jumble.models.ModelParser;
 
 public class ResultsActivity extends BaseActivity {
 
@@ -35,6 +47,8 @@ public class ResultsActivity extends BaseActivity {
 	 */
 	private static final String TAG = "ResultsActivity";
 	private ResultsGridAdapter rga;
+	private int currentCategory = 0;
+	private View currentCategoryView = null;
 	LinearLayout myGallery;
 
 	@Override
@@ -52,6 +66,7 @@ public class ResultsActivity extends BaseActivity {
 
 		}
 
+		new LoadCategoryTask().execute();
 	}
 
 	/**
@@ -108,4 +123,65 @@ public class ResultsActivity extends BaseActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	private class LoadCategoryTask extends
+	AsyncTask<Void, Void, Collection<Category>> {
+
+@Override
+protected Collection<Category> doInBackground(Void... params) {
+
+	File file = new File(
+			Util.createInternalStorage(ResultsActivity.this)
+					+ File.separator + "words.json");
+
+	try {
+		String json = Util.getStringFromFile(file);
+		Log.d(TAG, "Loaded json: " + json);
+		return ModelParser.readJsonData(json);
+
+	} catch (IOException e) {
+		Log.e(TAG, "Error reading file: " + e.getMessage());
+
+		return null;
+	} catch (JSONException e) {
+		Log.e(TAG, "Error reading file: " + e.getMessage());
+		return null;
+	}
+
+}
+
+@Override
+public void onPostExecute(Collection<Category> result) {
+	if (result == null) {
+		Log.e(TAG, "Could not load categories!!!!!");
+		finish();
+		return;
+	}
+
+	try {
+		rga.setCategories(result);
+		myGallery.removeAllViews();
+		for (int i = 0; i < rga.getCount(); i++) {
+			final int num = i;
+			View v = rga.getView(i, null, null);
+			myGallery.addView(v, i);
+			rga.setLayout(v);
+				v.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						if (currentCategoryView != null) {
+							currentCategoryView
+									.setBackgroundResource(R.drawable.blankview);
+						}
+						currentCategoryView = v;
+						currentCategoryView
+								.setBackgroundResource(R.drawable.shadow_avatar);
+						currentCategory = (Integer) v.getTag();
+					}
+				});
+
+		}
+	} catch (Exception e) {
+		Log.w(TAG, "Exception", e);
+	}
+}
+}
 }

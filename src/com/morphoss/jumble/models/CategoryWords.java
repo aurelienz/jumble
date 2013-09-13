@@ -66,7 +66,7 @@ public class CategoryWords {
 		// select the words with the current category and current country code
 		String selection = JumbleWordsTable.CATEGORY + " = ? AND "
 				+ JumbleWordsTable.CC + " = ?";
-		String[] selectionArgs = new String[] { category.getName(), cc };
+		String[] selectionArgs = new String[] { category.getLocalisedName(), cc };
 
 		Cursor cursor = context.getContentResolver().query(
 				JumbleProvider.CONTENT_URI_WORDS, projection, selection,

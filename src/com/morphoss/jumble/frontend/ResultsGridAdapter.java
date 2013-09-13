@@ -7,6 +7,7 @@ import com.morphoss.jumble.R;
 import com.morphoss.jumble.models.Category;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +20,12 @@ public class ResultsGridAdapter {
 	 * This class is an adapter for the category gridview in ResultsActivity
 	 */
 	private Context context;
-	private static final int[] categoriesArray = { R.drawable.animals,
-			R.drawable.fruits_vegetables, R.drawable.home, R.drawable.nature,
-			R.drawable.colors, R.drawable.clothes, R.drawable.health,
-			R.drawable.sports
 
-	};
-	private static final String TAG = "AvatarGridAdapter";
-	private int currentCategory = 0;
-	private View currentCategoryView = null;
-	private static String[] categories = { "Animals", "Fruits and Vegetables",
-			"Home", "Nature", "Colors", "Clothes", "Health", "Sports" };
+	private static final String TAG = "ResultsGridAdapter";
+	private static ImageView categoryImage;
+	private static TextView categoryLabel;
+	private Category category;
+	private static ArrayList<Category> categories = null;
 
 	public ResultsGridAdapter(Context context) {
 		super();
@@ -45,54 +41,54 @@ public class ResultsGridAdapter {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		LinearLayout categoryLayout;
-		categoryLayout = (LinearLayout) inflater.inflate(R.layout.gallery_category,
-				null);
-		categoryLayout.setTag(position);
-
-		ImageView categoryImage = (ImageView) categoryLayout
+		category = categories.get(position);
+		View categoryLayout = inflater
+				.inflate(R.layout.gallery_category, null);
+		categoryLabel = (TextView) categoryLayout
+				.findViewById(R.id.category_name);
+		categoryImage = (ImageView) categoryLayout
 				.findViewById(R.id.category_view);
+		categoryImage.setImageDrawable(category.getImage(context));
 
-		categoryImage.setImageDrawable(context.getResources().getDrawable(
-				categoriesArray[position]));
-		categoryImage.setTag(position);
-		TextView categoryName = (TextView) categoryLayout.findViewById(R.id.category_name);
-		categoryName.setText(categories[position]);
-		categoryImage.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (currentCategoryView != null) {
-					currentCategoryView
-							.setBackgroundResource(R.drawable.blankview);
-				}
-				currentCategoryView = v;
-				currentCategoryView
-						.setBackgroundResource(R.drawable.shadow_avatar);
-				currentCategory = (Integer) v.getTag();
-
-			}
-		});
+		categoryLayout.setTag(category.getId());
+		Log.d(TAG, "localised name : "+category.getLocalisedName());
+		categoryLabel.setText(category.getLocalisedName());
 
 		return categoryLayout;
 	}
 
+	public void setCategories(Collection<Category> newCategories) {
+
+		ResultsGridAdapter.categories = new ArrayList<Category>(newCategories.size());
+		ResultsGridAdapter.categories.addAll(newCategories);
+
+	}
+	
 	public int getCount() {
-		return categoriesArray.length;
+		if (categories == null)
+			return 0;
+		return categories.size();
 	}
 
 	public Object getItem(int position) {
-		return categoriesArray[position];
+		return categories.get(position);
 	}
 
 	public long getItemId(int position) {
-		return position;
+		return categories.get(position).getId();
 	}
 
+	public void setLayout(View v) {
+		ViewGroup.LayoutParams lp = v.getLayoutParams();
+		v.setLayoutParams(lp);
+	}
 	/**
+	 * this method gets the current category
 	 * 
-	 * @return the index of the selected category
+	 * @param position
+	 * @return the category selected
 	 */
-	public int getCurrentCategory() {
-		return categoriesArray[currentCategory];
+	public static Category getCategory(int position) {
+		return categories.get(position);
 	}
 }

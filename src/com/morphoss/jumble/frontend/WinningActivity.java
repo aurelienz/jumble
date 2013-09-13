@@ -93,7 +93,7 @@ public class WinningActivity extends BaseActivity {
 		textScore.setText("" + MainActivity.scoreTotal);
 		insertWord(WinningActivity.this,
 				JumbleActivity.correctWord.getNameKey(),
-				JumbleActivity.currentCategory.getName(),
+				JumbleActivity.currentCategory.getLocalisedName(),
 				SettingsActivity.getLanguageToLoad(), scoreDatabase);
 
 		Button playImage = (Button) findViewById(R.id.nextWord);
