@@ -34,12 +34,13 @@ public class JumbleCategoryTable {
 	public static final String _ID = "_id";
 	public static final String CATEGORY = "category";
 	public static final String UNLOCK = "unlock";
+	public static final String RATIO = "ratio";
 	public static final String CC = "cc";
 
 	// SQL to create table
 	public static final String DATABASE_CREATE = "CREATE TABLE if not exists "
 			+ TABLE + " (" + _ID + " integer PRIMARY KEY autoincrement,"
-			+ CATEGORY + "," + UNLOCK + "," + CC + ")";
+			+ CATEGORY + "," + UNLOCK + "," + RATIO + "," + CC + ")";
 
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(DATABASE_CREATE);

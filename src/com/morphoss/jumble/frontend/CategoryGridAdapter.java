@@ -64,6 +64,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 
 	}
 
+
 	/**
 	 * This method get the view of a specific category
 	 */
@@ -112,6 +113,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 						new String[] { JumbleCategoryTable.CATEGORY },
 						JumbleCategoryTable.UNLOCK + " = '1'",
 						null, null);
+		Log.d(TAG, "try to query a new category "+cursor.getCount());
 		try {
 			for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
 					.moveToNext()) {

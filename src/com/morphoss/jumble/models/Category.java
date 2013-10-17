@@ -29,13 +29,16 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.util.Log;
 
 import com.morphoss.jumble.Util;
 import com.morphoss.jumble.database.JumbleCategoryTable;
 import com.morphoss.jumble.database.JumbleProvider;
+import com.morphoss.jumble.database.JumbleWordsTable;
 import com.morphoss.jumble.frontend.CategoryGridAdapter;
 import com.morphoss.jumble.frontend.CategoryScreenActivity;
+import com.morphoss.jumble.frontend.JumbleActivity;
 import com.morphoss.jumble.frontend.SettingsActivity;
 
 public class Category {
@@ -55,6 +58,8 @@ public class Category {
 	private ArrayList<Word> wordsEasy = new ArrayList<Word>();
 	private ArrayList<Word> wordsMedium = new ArrayList<Word>();
 	private ArrayList<Word> wordsAdvanced = new ArrayList<Word>();
+	private JSONObject translations;
+	private JSONArray keys;
 
 	/**
 	 * 
@@ -72,17 +77,18 @@ public class Category {
 		;
 		this.imagePath = data.getString("image");
 
-		JSONObject translations = data.getJSONObject("translations");
+		translations = data.getJSONObject("translations");
 		names = new HashMap<String, String>();
-		JSONArray keys = translations.names();
+		keys = translations.names();
 		for (int i = 0; i < keys.length(); i++) {
 			String key = (String) keys.get(i);
 			String name = translations.getString(key);
 			names.put(key, name);
 			Log.d(TAG, "mapping key to name: " + key + ":" + name);
-		}
 
+		}
 		Log.d(TAG, "Created category : " + this);
+
 	}
 
 	/**
@@ -145,6 +151,9 @@ public class Category {
 		return names.get(defaultCC);
 	}
 
+	public String getCC() {
+		return SettingsActivity.getLanguageToLoad();
+	}
 
 	public int size() {
 		return words.size();
@@ -158,22 +167,60 @@ public class Category {
 	 */
 	public Word getNextWord(Context context) {
 
-		ArrayList<String> tempsolved = CategoryWords.getSolvedWordsFromCategory(context, this);
+		ContentValues cv = new ContentValues();
+		ArrayList<String> tempsolved = CategoryWords
+				.getSolvedWordsFromCategory(context, this);
 		double ratioSolved = (double) tempsolved.size() / (double) words.size();
 		Log.d(TAG, "size of solved list : " + tempsolved.size());
 		Log.d(TAG, "size of words list : " + words.size());
 		Log.d(TAG, "ratio solved : " + ratioSolved);
+		Log.d(TAG, "category selected : " + this.getLocalisedName());
+		int ratio = (int) (ratioSolved * 100);
+		Log.d(TAG, "ratio :" + ratio);
+		if (this.getLocalisedName() == null) {
+			Log.e(TAG, "error localised name is null :");
+		}
+			cv.put(JumbleCategoryTable.UNLOCK, "0");
+			cv.put(JumbleCategoryTable.CATEGORY, this.getLocalisedName());
+			cv.put(JumbleCategoryTable.RATIO, ratio);
+			cv.put(JumbleCategoryTable.CC, SettingsActivity.getLanguageToLoad());
+
+			if (ratio == 0) {
+				context.getContentResolver().insert(
+						JumbleProvider.CONTENT_URI_CATEGORIES, cv);
+			} else {
+				cv = new ContentValues();
+				cv.put(JumbleCategoryTable.RATIO, ratio);
+				String selection = JumbleCategoryTable.CATEGORY + "= ? AND "+JumbleCategoryTable.CC+"= ?";
+				String[] selectionArgs = { this.getLocalisedName(), SettingsActivity.getLanguageToLoad() };
+				context.getContentResolver().update(
+						Uri.withAppendedPath(JumbleProvider.CONTENT_URI_CATEGORIES, "addratio"), cv, selection,
+						selectionArgs);
+			}
 		Category nextCategory = CategoryGridAdapter.getCategory(getId());
 		Log.d(TAG, "next category name : " + nextCategory.getLocalisedName());
-		if (!nextCategory.unlocked() && ratioSolved >= 0.2) {
-			Log.d(TAG, "unlocking a new category");
-			unlockedCategories.add(nextCategory.getLocalisedName());
-			ContentValues cv = new ContentValues();
-			cv.put(JumbleCategoryTable.UNLOCK, "1");
-			cv.put(JumbleCategoryTable.CATEGORY,
-					nextCategory.getLocalisedName());
+		if(nextCategory.getLocalisedName() != null && ratio == 0){
+			cv = new ContentValues();
+			cv.put(JumbleCategoryTable.UNLOCK, "0");
+			cv.put(JumbleCategoryTable.CATEGORY, nextCategory.getLocalisedName());
+			cv.put(JumbleCategoryTable.RATIO, ratio);
+			cv.put(JumbleCategoryTable.CC, SettingsActivity.getLanguageToLoad());
 			context.getContentResolver().insert(
 					JumbleProvider.CONTENT_URI_CATEGORIES, cv);
+		}
+		if (!nextCategory.unlocked() && ratio > 20 && nextCategory.getLocalisedName() != null) {
+			Log.d(TAG, "unlocking a new category");
+			unlockedCategories.add(nextCategory.getLocalisedName());
+			cv = new ContentValues();
+			//cv.put(JumbleCategoryTable.CATEGORY, nextCategory.getLocalisedName());
+			//cv.put(JumbleCategoryTable.CC, SettingsActivity.getLanguageToLoad());
+			cv.put(JumbleCategoryTable.UNLOCK, "1");
+			String selection = JumbleCategoryTable.CATEGORY + "= ? AND "+JumbleCategoryTable.CC+"= ?";
+			String[] selectionArgs = { nextCategory.getLocalisedName(), SettingsActivity.getLanguageToLoad() };
+			context.getContentResolver().update(
+					Uri.withAppendedPath(JumbleProvider.CONTENT_URI_CATEGORIES, "unlockCategory"), cv, selection,
+					selectionArgs);
+			//context.getContentResolver().insert(JumbleProvider.CONTENT_URI_CATEGORIES,cv);
 			nextCategory.setUnlocked(true);
 		}
 
@@ -186,14 +233,18 @@ public class Category {
 
 		ArrayList<Word> filteredwords = new ArrayList<Word>();
 		filteredwords.addAll(wordsEasy);
-		if (filteredwords.size() < 3) filteredwords.addAll(wordsMedium);
-		if (filteredwords.size() < 3) filteredwords.addAll(wordsAdvanced);
-		if (filteredwords.size() == 0 ) return null;
+		if (filteredwords.size() < 3)
+			filteredwords.addAll(wordsMedium);
+		if (filteredwords.size() < 3)
+			filteredwords.addAll(wordsAdvanced);
+		if (filteredwords.size() == 0)
+			return null;
 
 		Word word = CategoryWords.getRandomItem(filteredwords);
 		ArrayList<Word> wordList;
-		Log.d(TAG, "the random word is : "+word.getLocalisedWord()+" with level :"+word.getLevel());
-		switch(word.getLevel()){
+		Log.d(TAG, "the random word is : " + word.getLocalisedWord()
+				+ " with level :" + word.getLevel());
+		switch (word.getLevel()) {
 		case EASY:
 			wordList = wordsEasy;
 			break;
@@ -207,8 +258,8 @@ public class Category {
 			wordList = wordsAdvanced;
 			break;
 		}
-		for(int i=0; i<wordList.size(); i++){
-			if(wordList.get(i).equals(word)){
+		for (int i = 0; i < wordList.size(); i++) {
+			if (wordList.get(i).equals(word)) {
 				wordList.remove(i);
 				break;
 			}
@@ -232,7 +283,6 @@ public class Category {
 		wordsAdvanced = CategoryWords.getWordsByDifficulty(tempWords,
 				Difficulty.ADVANCED);
 		printWordList("All Advanced Available Words", wordsAdvanced);
-
 
 	}
 

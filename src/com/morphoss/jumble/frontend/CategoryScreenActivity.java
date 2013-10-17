@@ -63,7 +63,6 @@ public class CategoryScreenActivity extends BaseActivity {
 	private static CategoryGridAdapter pga;
 	private PopupWindow pwindowLevel;
 	private ImageView btnClosePopupLevel;
-	
 
 	/**
 	 * 
@@ -107,17 +106,26 @@ public class CategoryScreenActivity extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		myApp.resumeMusic();
-		final Handler handler = new Handler();
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				// Show the popup window of an unlocked level after 0.5s = 500ms
-				if(!Category.unlockedCategories.isEmpty()){
-				PopupWindowLevel();
-				}
+		if (!Category.unlockedCategories.isEmpty()) {
+			DisplayMetrics displaymetrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+			int height = displaymetrics.heightPixels;
+			int width = displaymetrics.widthPixels;
+			pga = new CategoryGridAdapter(this, width, height);
+			new LoadCategoryTask().execute();
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					// Show the popup window of an unlocked level after 0.5s =
+					// 500ms
+					if (!Category.unlockedCategories.isEmpty()) {
+						PopupWindowLevel();
+					}
 
-			}
-		}, 500);
+				}
+			}, 500);
+		}
 	}
 
 	/**
@@ -151,6 +159,7 @@ public class CategoryScreenActivity extends BaseActivity {
 
 		}
 	};
+
 	@Override
 	protected void onStart() {
 		super.onStart();

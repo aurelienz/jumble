@@ -18,8 +18,8 @@ public class CategoryWords {
 
 	public static String TAG = "CategoryWords";
 
-	private String currentCategory;
-	private static ArrayList<Word> words = new ArrayList<Word>();
+	public static String currentCategory;
+	private ArrayList<Word> words = new ArrayList<Word>();
 
 	public CategoryWords() {
 		super();
@@ -27,7 +27,7 @@ public class CategoryWords {
 
 	public CategoryWords(String currentCategory, ArrayList<Word> words) {
 		super();
-		this.currentCategory = currentCategory;
+		CategoryWords.currentCategory = currentCategory;
 		this.words = words;
 	}
 

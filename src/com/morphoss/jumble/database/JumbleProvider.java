@@ -44,6 +44,8 @@ public class JumbleProvider extends ContentProvider {
 	private static final int ALL_CATEGORIES = 3;
 	private static final int SINGLE_CATEGORY = 4;
 	private static final int ADD_SCORE = 5;
+	private static final int ADD_RATIO = 6;
+	private static final int UNLOCK_CATEGORY = 7;
 
 	private static final UriMatcher uriMatcher;
 	static {
@@ -51,8 +53,11 @@ public class JumbleProvider extends ContentProvider {
 		uriMatcher.addURI(AUTHORITY, "words", ALL_WORDS);
 		uriMatcher.addURI(AUTHORITY, "categories", ALL_CATEGORIES);
 		uriMatcher.addURI(AUTHORITY, "words/#", SINGLE_WORD);
-		uriMatcher.addURI(AUTHORITY, "words/addscore", ADD_SCORE);
 		uriMatcher.addURI(AUTHORITY, "categories/#", SINGLE_CATEGORY);
+		uriMatcher.addURI(AUTHORITY, "words/addscore", ADD_SCORE);
+		uriMatcher.addURI(AUTHORITY, "categories/addratio", ADD_RATIO);
+		uriMatcher.addURI(AUTHORITY, "categories/unlockCategory", UNLOCK_CATEGORY);
+		
 	}
 
 	private JumbleDatabaseHelper dbHelper;
@@ -198,6 +203,20 @@ public class JumbleProvider extends ContentProvider {
 					JumbleWordsTable.SCORE+"="+JumbleWordsTable.SCORE+"+"+values.getAsInteger(JumbleWordsTable.ADDSCORE)
 					+ " WHERE "+ selection, selectionArgs);
 			return 1;
+		case ADD_RATIO:
+			db.execSQL(
+					"UPDATE " + JumbleCategoryTable.TABLE + " SET " +
+					JumbleCategoryTable.RATIO+"="+values.getAsInteger(JumbleCategoryTable.RATIO)
+					+ " WHERE "+ selection, selectionArgs);
+			return 1;
+		case UNLOCK_CATEGORY:
+			int rowChanged = db.update(JumbleCategoryTable.TABLE, values, selection, selectionArgs);
+			/*db.execSQL(
+					"UPDATE " + JumbleCategoryTable.TABLE + " SET " +
+					JumbleCategoryTable.UNLOCK+"="+values.getAsInteger(JumbleCategoryTable.UNLOCK)
+					+ " WHERE "+ selection, selectionArgs);*/
+			Log.d(TAG, "unlock a category, row changed : "+rowChanged);
+			return rowChanged;
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
