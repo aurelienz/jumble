@@ -25,7 +25,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class JumbleDatabaseHelper extends SQLiteOpenHelper {
 
-	private static final String DATABASE_NAME = "/mnt/sdcard/jumble.db";
+	private static final String DATABASE_NAME = "jumble";
 	private static final int DATABASE_VERSION = 4;
 
 	public JumbleDatabaseHelper(Context context) {
