@@ -12,8 +12,8 @@
     <string name="start_play">Start !</string>
     <string name="choose_avatar">Choose your avatar</string>
     <string name="name_avatar">Name</string>
-    <string name="score_total">Total score :</string>
-    <string name="best_score">Best score :</string>
+    <string name="score_total">Total score : </string>
+    <string name="best_score">Best score : </string>
     <string name="language">Language </string>
     <string name="music">Music</string>
     <string name="needHint">Need a hint ?</string>
@@ -40,6 +40,7 @@
     <string name="score_clothes">You need to have 8000 points to unlock the category: Clothes</string>
     <string name="score_health">You need to have 12000 points to unlock the category: Health</string>
     <string name="score_sports">You need to have 16000 points to unlock the category: Sports</string>
-    <string name="unlockNewLevel">To unlock a new level, you have to solve more than 20% of the words of the previous category</string>
+    <string name="unlockNewLevel">To unlock a new level, you have to solve more than 20% of the words of the previous category.</string>
+    <string name="sameWords">The word disappeared of the words to find when you\'ve reached more than 2000 points for this word.</string>
 
 </resources>

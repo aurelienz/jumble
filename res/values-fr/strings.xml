@@ -12,8 +12,8 @@
     <string name="start_play">Jouer !</string>
     <string name="choose_avatar">Choisis ton avatar</string>
     <string name="name_avatar">Nom</string>
-    <string name="score_total">Score total :</string>
-    <string name="best_score">Meilleur score :</string>
+    <string name="score_total">Score total : </string>
+    <string name="best_score">Meilleur score : </string>
     <string name="language">Langage </string>
     <string name="music">Musique</string>
     <string name="needHint">Besoin d\'aide ?</string>
@@ -40,6 +40,7 @@
     <string name="score_clothes">Tu as besoin de 8000 points pour débloquer la catégorie: Vêtements</string>
     <string name="score_health">Tu as besoin de 12000 points pour débloquer la catégorie: Santé</string>
     <string name="score_sports">Tu as besoin de 16000 points pour débloquer la catégorie: Sports</string>
-    <string name="unlockNewLevel">Pour débloquer un nouveau niveau, vous devez résoudre au moins 20% des mots de la catégorie précédente.</string>
+    <string name="unlockNewLevel">Pour débloquer un nouveau niveau, tu dois résoudre au moins 20% des mots de la catégorie précédente.</string>
+    <string name="sameWords">Un mot disparait des mots à trouver quand tu as atteint 2000 points à ce mot.</string>
 
 </resources>
