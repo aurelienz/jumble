@@ -79,8 +79,8 @@ public class JumbleActivity extends BaseActivity {
 	private GridView gridViewGuess;
 	private GridView gridViewScrambled;
 	private ImageView imageAdaptor;
-	private TileGridAdapter guessAdaptor;
-	private TileGridAdapter scrambledAdaptor;
+	private JumbleGridAdapter guessAdaptor;
+	private JumbleGridAdapter scrambledAdaptor;
 	private int timeStart;
 	private int timeEnd;
 	private MyTouchListener touchListener;
@@ -98,7 +98,14 @@ public class JumbleActivity extends BaseActivity {
 		setContentView(R.layout.activity_jumble);
 		Bundle b = getIntent().getExtras();
 		int categoryIndex = b.getInt(CATEGORY_KEY);
-		currentCategory = CategoryGridAdapter.getCategory(categoryIndex);
+		if (currentCategory == null
+				|| !currentCategory.getLocalisedName().equals(
+						CategoryGridAdapter.getCategory(categoryIndex)
+								.getLocalisedName())) {
+			currentCategory = CategoryGridAdapter.getCategory(categoryIndex);
+			currentCategory.getNewWords(this);
+		}
+	
 		touchListener = new MyTouchListener();
 		dragListener = new MyDragListener();
 		gridViewGuess = (GridView) findViewById(R.id.guess);
@@ -115,10 +122,12 @@ public class JumbleActivity extends BaseActivity {
 			}
 		});
 
-		if (currentCategory.getNextWord(this) == null) {
-			startVideo();
+		Word w= currentCategory.getNextWord(this);
+		if ( w == null) {
+			currentCategory = null;
+			Log.d(TAG, "we shouldn't be here!!!!!");
 		} else {
-			startNewWord(currentCategory.getNextWord(this));
+			startNewWord(w);
 		}
 	}
 
@@ -137,7 +146,8 @@ public class JumbleActivity extends BaseActivity {
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-			pwindo = new PopupWindow(layout, metrics.widthPixels, metrics.heightPixels, true);
+			pwindo = new PopupWindow(layout, metrics.widthPixels,
+					metrics.heightPixels, true);
 			pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
 			btnClosePopup = (ImageView) layout
@@ -182,7 +192,7 @@ public class JumbleActivity extends BaseActivity {
 	/**
 	 * This method selects a new word, scrambled it and displays it on the
 	 * screen
-	 *
+	 * 
 	 * @param word
 	 *            the word to guess
 	 */
@@ -211,21 +221,21 @@ public class JumbleActivity extends BaseActivity {
 		guessAdaptor = generateBlankAdapter(wordLen);
 		gridViewGuess.setNumColumns(wordLen);
 		gridViewGuess.setAdapter(guessAdaptor);
-		Log.d(TAG,
-				"current category min score :" + currentCategory.getMinScore());
 
 	}
 
 	/**
 	 * This method plays the pronunciation of the word
-	 *
+	 * 
 	 * @param view
 	 */
 	public void playHint(View view) {
 		String sound = wordHint.getSoundPath();
-		if(sound != null){
-		Log.d(TAG, "soundPath: " + sound);
-		myApp.playSoundJumble(Util.createInternalStorage(JumbleActivity.this) + File.separator + sound);
+		if (sound != null) {
+			Log.d(TAG, "soundPath: " + sound);
+			myApp.playSoundJumble(Util
+					.createInternalStorage(JumbleActivity.this)
+					+ File.separator + sound);
 		}
 	}
 
@@ -251,11 +261,11 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This methods generates the gridview with scrambled letters
-	 *
+	 * 
 	 * @param word
 	 * @return
 	 */
-	private TileGridAdapter generateWordAdapter(String word) {
+	private JumbleGridAdapter generateWordAdapter(String word) {
 		ArrayList<View> views = new ArrayList<View>();
 
 		for (int i = 0; i < word.length(); i++) {
@@ -272,17 +282,17 @@ public class JumbleActivity extends BaseActivity {
 			views.add(layout);
 		}
 
-		return new TileGridAdapter(this, views);
+		return new JumbleGridAdapter(this, views);
 
 	}
 
 	/**
 	 * This method generates blank views in the guess gridview
-	 *
+	 * 
 	 * @param count
 	 * @return
 	 */
-	private TileGridAdapter generateBlankAdapter(int count) {
+	private JumbleGridAdapter generateBlankAdapter(int count) {
 		ArrayList<View> views = new ArrayList<View>();
 
 		for (int i = 0; i < count; i++) {
@@ -297,13 +307,13 @@ public class JumbleActivity extends BaseActivity {
 			layout.setOnDragListener(dragListener);
 			views.add(layout);
 		}
-		return new TileGridAdapter(this, views);
+		return new JumbleGridAdapter(this, views);
 
 	}
 
 	/**
 	 * This method scrambles the word
-	 *
+	 * 
 	 * @param word
 	 *            to guess
 	 * @return the word scrambled
@@ -353,27 +363,31 @@ public class JumbleActivity extends BaseActivity {
 
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == WinningActivity.RESULT_RETURN_CATEGORY) {
+			currentCategory = null;
 			finish();
 			Intent intent = new Intent();
 			intent.setClass(JumbleActivity.this, CategoryScreenActivity.class);
 			startActivity(intent);
 		} else if (resultCode == WinningActivity.RESULT_RETURN_HOME) {
+			currentCategory = null;
 			finish();
 			Intent intent = new Intent();
 			intent.setClass(JumbleActivity.this, MainActivity.class);
 			startActivity(intent);
 		} else {
-			if (currentCategory.getNextWord(this) == null) {
+			Word w = currentCategory.getNextWord(this);
+			if (w == null) {
 				startVideo();
+				currentCategory = null;
 			} else {
-				startNewWord(currentCategory.getNextWord(this));
+				startNewWord(w);
 			}
 		}
 	}
 
 	/**
 	 * This class defines the rules of the drag and drop
-	 *
+	 * 
 	 */
 	class MyDragListener implements OnDragListener {
 		Drawable enterShape = getResources().getDrawable(R.drawable.letter);
@@ -425,7 +439,7 @@ public class JumbleActivity extends BaseActivity {
 		/**
 		 * This method swaps the views when a letter is dropped on the guess
 		 * gridview
-		 *
+		 * 
 		 * @param a
 		 * @param b
 		 */
@@ -483,8 +497,6 @@ public class JumbleActivity extends BaseActivity {
 				Log.d(TAG, "time end: " + timeEnd);
 				time = getTimeEnd() - getTimeStart();
 				Log.d(TAG, "You have found the word in: " + time + " ms");
-				insertWord(correctWord.getNameKey(),
-						currentCategory.getName(this), cc);
 				Intent intent = new Intent(this, WinningActivity.class);
 				intent.putExtra(WinningActivity.HAVE_MORE_WORDS,
 						(currentCategory.size() > 0));
@@ -500,28 +512,15 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This method inserts the word found in the table words of the database
-	 *
+	 * 
 	 * @param word
 	 * @param category
 	 * @param cc
 	 */
-	private void insertWord(String word, String category, String cc) {
-
-		ContentValues cv = new ContentValues();
-		cv.put(JumbleWordsTable.WORD, word);
-		cv.put(JumbleWordsTable.CATEGORY, category);
-		cv.put(JumbleWordsTable.CC, cc);
-
-		resolver = this.getContentResolver();
-		resolver.insert(JumbleProvider.CONTENT_URI_WORDS, cv);
-
-		Log.d(TAG, "add the word:" + word + " from category : " + category
-				+ " with cc :" + cc + " in database");
-	}
 
 	/**
 	 * This method gets the time when you start resolving the word
-	 *
+	 * 
 	 * @return
 	 */
 	public int getTimeStart() {
@@ -534,7 +533,7 @@ public class JumbleActivity extends BaseActivity {
 
 	/**
 	 * This methods gets the time when you have found the word
-	 *
+	 * 
 	 * @return
 	 */
 	public int getTimeEnd() {

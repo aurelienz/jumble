@@ -26,16 +26,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class TileGridAdapter extends BaseAdapter {
+public class JumbleGridAdapter extends BaseAdapter {
 
 	/**
 	 * This class is an adapter for the JumbleActivity
 	 */
-	public static final String TAG = "TileGridAdapter";
+	public static final String TAG = "JumbleGridAdapter";
 
 	private ArrayList<View> contents;
 
-	public TileGridAdapter(Context context, ArrayList<View> initialViews) {
+	public JumbleGridAdapter(Context context, ArrayList<View> initialViews) {
 		super();
 		contents = new ArrayList<View>();
 		for (int i = 0; i < initialViews.size(); i++)

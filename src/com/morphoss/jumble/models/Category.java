@@ -20,23 +20,25 @@ package com.morphoss.jumble.models;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.util.Log;
 
 import com.morphoss.jumble.Util;
+import com.morphoss.jumble.database.JumbleCategoryTable;
 import com.morphoss.jumble.database.JumbleProvider;
 import com.morphoss.jumble.database.JumbleWordsTable;
+import com.morphoss.jumble.frontend.CategoryGridAdapter;
+import com.morphoss.jumble.frontend.CategoryScreenActivity;
+import com.morphoss.jumble.frontend.JumbleActivity;
 import com.morphoss.jumble.frontend.SettingsActivity;
 
 public class Category {
@@ -45,21 +47,19 @@ public class Category {
 	 * This class sets all the details about the a Category type
 	 */
 	public static String TAG = "Category";
-
+	public static ArrayList<String> unlockedCategories = new ArrayList<String>();
 	private int id;
 	private HashMap<String, String> names;
 	private static final String defaultCC = "en";
-	private ArrayList<Word> words = new ArrayList<Word>();
 	private String imagePath;
-	private final int minScore;
-
-	/**
-	 * 
-	 * @return the minimum score to unlock the category
-	 */
-	public int getMinScore() {
-		return minScore;
-	}
+	private boolean unlocked = false;
+	private ArrayList<Word> words = new ArrayList<Word>();
+	private ArrayList<String> solved = new ArrayList<String>();
+	private ArrayList<Word> wordsEasy = new ArrayList<Word>();
+	private ArrayList<Word> wordsMedium = new ArrayList<Word>();
+	private ArrayList<Word> wordsAdvanced = new ArrayList<Word>();
+	private JSONObject translations;
+	private JSONArray keys;
 
 	/**
 	 * 
@@ -71,29 +71,24 @@ public class Category {
 
 		return Util.getImage(context, imagePath);
 	}
-	
-	
-	private void populateCache(Context context) {
-		InputStream fis = null;
-	}
 
 	private Category(int id, JSONObject data) throws JSONException {
 		this.id = id;
 		;
 		this.imagePath = data.getString("image");
-		this.minScore = data.getInt("minscore");
 
-		JSONObject translations = data.getJSONObject("translations");
+		translations = data.getJSONObject("translations");
 		names = new HashMap<String, String>();
-		JSONArray keys = translations.names();
+		keys = translations.names();
 		for (int i = 0; i < keys.length(); i++) {
 			String key = (String) keys.get(i);
 			String name = translations.getString(key);
 			names.put(key, name);
 			Log.d(TAG, "mapping key to name: " + key + ":" + name);
-		}
 
+		}
 		Log.d(TAG, "Created category : " + this);
+
 	}
 
 	/**
@@ -121,8 +116,8 @@ public class Category {
 
 	@Override
 	public String toString() {
-		String value = "Id: " + id + " ImagePath: " + imagePath + " minScore :"
-				+ minScore + "\nTranslations:\n";
+		String value = "Id: " + id + " ImagePath: " + imagePath
+				+ "\nTranslations:\n";
 		for (String key : names.keySet())
 			value += "\t" + key + ":" + names.get(key) + "\n";
 		value += "Words:\n";
@@ -146,18 +141,18 @@ public class Category {
 	 * @param context
 	 * @return
 	 */
-	public String getLocalisedName(Context context) {
+	public String getLocalisedName() {
 		String cc = SettingsActivity.getLanguageToLoad();
 
-		Log.d(TAG, "Current CC is " + cc);
+		// Log.d(TAG, "Current CC is " + cc);
 		if (names.containsKey(cc)) {
 			return names.get(cc);
 		}
 		return names.get(defaultCC);
 	}
 
-	public String getName(Context context) {
-		return names.get(defaultCC);
+	public String getCC() {
+		return SettingsActivity.getLanguageToLoad();
 	}
 
 	public int size() {
@@ -171,128 +166,124 @@ public class Category {
 	 * @return the next word of the available ones
 	 */
 	public Word getNextWord(Context context) {
-		ArrayList<Word> words = this.words; // getAllWordsForThisCategory();
-		printWordList("All Available Words", words);
-		words = getLocalisedWords(words);
-		printWordList("All Localised Available Words", words);
-		ArrayList<String> solved = getSolvedWordsForCategory(context, this);
-		printWordList("All solved Words", solved);
-		words = removeSolvedFromList(words, solved);
-		printWordList("All Available Words minus solved", words);
 
-		removeAllButEasiest(words);
-		printWordList("All but easiest", words);
-		Word word = getRandomItem(words);
-		return word;
-
-	}
-
-	public static ArrayList<Word> getLocalisedWords(ArrayList<Word> list){
-		
-		ArrayList<Word> filteredWords = new ArrayList<Word>();
-		for (Word word : list) {
-			if (word.hasLocalisation())
-				filteredWords.add(word);
+		ContentValues cv = new ContentValues();
+		ArrayList<String> tempsolved = CategoryWords
+				.getSolvedWordsFromCategory(context, this);
+		double ratioSolved = (double) tempsolved.size() / (double) words.size();
+		Log.d(TAG, "size of solved list : " + tempsolved.size());
+		Log.d(TAG, "size of words list : " + words.size());
+		Log.d(TAG, "ratio solved : " + ratioSolved);
+		Log.d(TAG, "category selected : " + this.getLocalisedName());
+		int ratio = (int) (ratioSolved * 100);
+		Log.d(TAG, "ratio :" + ratio);
+		if (this.getLocalisedName() == null) {
+			Log.e(TAG, "error localised name is null :");
 		}
+			cv.put(JumbleCategoryTable.UNLOCK, "0");
+			cv.put(JumbleCategoryTable.CATEGORY, this.getLocalisedName());
+			cv.put(JumbleCategoryTable.RATIO, ratio);
+			cv.put(JumbleCategoryTable.CC, SettingsActivity.getLanguageToLoad());
 
-		return filteredWords;
-	}
-	/**
-	 * This methods returns the words already found
-	 * 
-	 * @param context
-	 * @param category
-	 * @return
-	 */
-	public static ArrayList<String> getSolvedWordsForCategory(Context context,
-			Category category) {
-		// query contentprovider and return list
-
-		// get the current countrycode
-		String cc = SettingsActivity.getLanguageToLoad();
-
-		// show the column of words
-		String[] projection = { JumbleWordsTable.WORD };
-		// select the words with the current category and current country code
-		String selection = JumbleWordsTable.CATEGORY + " = ? AND "
-				+ JumbleWordsTable.CC + " = ?";
-		String[] selectionArgs = new String[] { category.getName(context), cc };
-
-		Cursor cursor = context.getContentResolver().query(
-				JumbleProvider.CONTENT_URI_WORDS, projection, selection,
-				selectionArgs, null);
-		ArrayList<String> solvedWords = new ArrayList<String>();
-		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-			ContentValues myRow = new ContentValues();
-			DatabaseUtils.cursorRowToContentValues(cursor, myRow);
-			Log.d(TAG, "Got row: " + myRow.getAsString(JumbleWordsTable.WORD));
-			solvedWords.add(myRow.getAsString(JumbleWordsTable.WORD));
-
-		}
-		cursor.close();
-
-		return solvedWords;
-	}
-
-	/**
-	 * 
-	 * @param wordList
-	 * @param solvedList
-	 * @return the list of words without the words already solved
-	 */
-	public static ArrayList<Word> removeSolvedFromList(
-			ArrayList<Word> wordList, ArrayList<String> solvedList) {
-
-		ArrayList<Word> filteredWords = new ArrayList<Word>();
-		for (Word word : wordList) {
-			if (!solvedList.contains(word.getNameKey()))
-				filteredWords.add(word);
-		}
-
-		return filteredWords;
-	}
-
-	/**
-	 * This method gets the list of the easiest words still available
-	 * 
-	 * @param context
-	 * @param words
-	 */
-	public static void removeAllButEasiest(ArrayList<Word> words) {
-		// Whats the easiest?
-		Difficulty easiest = Difficulty.ADVANCED;
-
-		for (Word word : words) {
-			if (word.getLevel().ordinal() < easiest.ordinal()) {
-				easiest = word.getLevel();
-
+			if (ratio == 0) {
+				context.getContentResolver().insert(
+						JumbleProvider.CONTENT_URI_CATEGORIES, cv);
+			} else {
+				cv = new ContentValues();
+				cv.put(JumbleCategoryTable.RATIO, ratio);
+				String selection = JumbleCategoryTable.CATEGORY + "= ? AND "+JumbleCategoryTable.CC+"= ?";
+				String[] selectionArgs = { this.getLocalisedName(), SettingsActivity.getLanguageToLoad() };
+				context.getContentResolver().update(
+						Uri.withAppendedPath(JumbleProvider.CONTENT_URI_CATEGORIES, "addratio"), cv, selection,
+						selectionArgs);
 			}
+		Category nextCategory = CategoryGridAdapter.getCategory(getId());
+		Log.d(TAG, "next category name : " + nextCategory.getLocalisedName());
+		if(nextCategory.getLocalisedName() != null && ratio == 0){
+			cv = new ContentValues();
+			cv.put(JumbleCategoryTable.UNLOCK, "0");
+			cv.put(JumbleCategoryTable.CATEGORY, nextCategory.getLocalisedName());
+			cv.put(JumbleCategoryTable.RATIO, ratio);
+			cv.put(JumbleCategoryTable.CC, SettingsActivity.getLanguageToLoad());
+			context.getContentResolver().insert(
+					JumbleProvider.CONTENT_URI_CATEGORIES, cv);
 		}
-		Iterator<Word> iterator = words.iterator();
-		while (iterator.hasNext()) {
-			Word word1 = iterator.next();
-			if (word1.getLevel() != easiest) {
-				iterator.remove();
-			}
+		if (!nextCategory.unlocked() && ratio > 20 && nextCategory.getLocalisedName() != null) {
+			Log.d(TAG, "unlocking a new category");
+			unlockedCategories.add(nextCategory.getLocalisedName());
+			cv = new ContentValues();
+			//cv.put(JumbleCategoryTable.CATEGORY, nextCategory.getLocalisedName());
+			//cv.put(JumbleCategoryTable.CC, SettingsActivity.getLanguageToLoad());
+			cv.put(JumbleCategoryTable.UNLOCK, "1");
+			String selection = JumbleCategoryTable.CATEGORY + "= ? AND "+JumbleCategoryTable.CC+"= ?";
+			String[] selectionArgs = { nextCategory.getLocalisedName(), SettingsActivity.getLanguageToLoad() };
+			context.getContentResolver().update(
+					Uri.withAppendedPath(JumbleProvider.CONTENT_URI_CATEGORIES, "unlockCategory"), cv, selection,
+					selectionArgs);
+			//context.getContentResolver().insert(JumbleProvider.CONTENT_URI_CATEGORIES,cv);
+			nextCategory.setUnlocked(true);
 		}
 
-	}
+		int countEasyWords = wordsEasy.size();
+		Log.d(TAG, "count of easy words :" + countEasyWords);
+		int countMediumWords = wordsMedium.size();
+		Log.d(TAG, "count of medium words :" + countMediumWords);
+		int countAdvancedWords = wordsAdvanced.size();
+		Log.d(TAG, "count of advanced words :" + countAdvancedWords);
 
-	/**
-	 * 
-	 * @param words
-	 * @return a random word from the list of the easiest available words
-	 */
-	public static Word getRandomItem(ArrayList<Word> words) {
-
-		if (words.size() < 1)
+		ArrayList<Word> filteredwords = new ArrayList<Word>();
+		filteredwords.addAll(wordsEasy);
+		if (filteredwords.size() < 3)
+			filteredwords.addAll(wordsMedium);
+		if (filteredwords.size() < 3)
+			filteredwords.addAll(wordsAdvanced);
+		if (filteredwords.size() == 0)
 			return null;
-		Random myRandom = new Random();
-		int index = myRandom.nextInt(words.size());
-		Word randomWord = words.get(index);
-		words.remove(index);
 
-		return randomWord;
+		Word word = CategoryWords.getRandomItem(filteredwords);
+		ArrayList<Word> wordList;
+		Log.d(TAG, "the random word is : " + word.getLocalisedWord()
+				+ " with level :" + word.getLevel());
+		switch (word.getLevel()) {
+		case EASY:
+			wordList = wordsEasy;
+			break;
+		case MEDIUM:
+			wordList = wordsMedium;
+			break;
+		case ADVANCED:
+			wordList = wordsAdvanced;
+			break;
+		default:
+			wordList = wordsAdvanced;
+			break;
+		}
+		for (int i = 0; i < wordList.size(); i++) {
+			if (wordList.get(i).equals(word)) {
+				wordList.remove(i);
+				break;
+			}
+		}
+		return word;
+	}
+
+	public void getNewWords(Context context) {
+
+		ArrayList<Word> tempWords = this.words;
+		tempWords = CategoryWords.getLocalisedWordsFromCategory(tempWords);
+		solved = CategoryWords.getSolvedWordsFromCategory(context, this);
+		tempWords = CategoryWords.removeKnownWordsFromList(context, tempWords,
+				solved);
+		wordsEasy = CategoryWords.getWordsByDifficulty(tempWords,
+				Difficulty.EASY);
+		printWordList("All Easy Available Words", wordsEasy);
+		wordsMedium = CategoryWords.getWordsByDifficulty(tempWords,
+				Difficulty.MEDIUM);
+		printWordList("All Medium Available Words", wordsMedium);
+		wordsAdvanced = CategoryWords.getWordsByDifficulty(tempWords,
+				Difficulty.ADVANCED);
+		printWordList("All Advanced Available Words", wordsAdvanced);
+
 	}
 
 	/**
@@ -310,4 +301,11 @@ public class Category {
 		Log.d(TAG, listString);
 	}
 
+	public boolean unlocked() {
+		return unlocked;
+	}
+
+	public void setUnlocked(boolean unlocked) {
+		this.unlocked = unlocked;
+	}
 }

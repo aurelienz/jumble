@@ -37,11 +37,13 @@ public class JumbleWordsTable {
 	public static final String WORD = "word";
 	public static final String CATEGORY = "category";
 	public static final String CC = "cc";
+	public static final String SCORE = "score";
+	public static final String ADDSCORE = "addscore";
 
 	// SQL to create table
 	public static final String DATABASE_CREATE = "CREATE TABLE if not exists "
 			+ TABLE + " (" + _ID + " integer PRIMARY KEY autoincrement," + WORD
-			+ "," + CATEGORY + "," + CC + ")";
+			+ "," + CATEGORY + "," + CC + "," + SCORE + ")";
 
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(DATABASE_CREATE);

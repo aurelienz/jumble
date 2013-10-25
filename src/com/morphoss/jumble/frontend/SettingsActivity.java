@@ -44,7 +44,7 @@ public class SettingsActivity extends BaseActivity {
 	/**
 	 * This class sets the settings/options of the game
 	 */
-	private static String languageToLoad = "en";
+	private static String languageToLoad = null;
 	private SeekBar volumeSeekbar = null;
 	private AudioManager audioManager = null;
 	private static final String TAG = "SettingsActivity";
@@ -82,6 +82,11 @@ public class SettingsActivity extends BaseActivity {
 		Log.d(TAG, "the words have been deleted");
 		resolver = this.getContentResolver();
 		resolver.delete(JumbleProvider.CONTENT_URI_WORDS, null, null);
+	}
+	private void deleteKnownCategories() {
+		Log.d(TAG, "the unlocked categories have been deleted");
+		resolver = this.getContentResolver();
+		resolver.delete(JumbleProvider.CONTENT_URI_CATEGORIES, null, null);
 	}
 
 	@Override
@@ -128,6 +133,7 @@ public class SettingsActivity extends BaseActivity {
 				public void onClick(View v) {
 
 					deleteWords();
+					deleteKnownCategories();
 
 				}
 			});
@@ -202,6 +208,6 @@ public class SettingsActivity extends BaseActivity {
 
 	public static void setLanguage(){
 		languageToLoad = Locale.getDefault().getLanguage();
-		if(!(languageToLoad.contains("en")) || !(languageToLoad.contains("fr"))) languageToLoad = "en";
+		if(!(languageToLoad.contains("en") || languageToLoad.contains("fr"))) languageToLoad = "en";
 	}
 }

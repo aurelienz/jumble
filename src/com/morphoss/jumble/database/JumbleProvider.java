@@ -35,22 +35,29 @@ public class JumbleProvider extends ContentProvider {
 	public static final String AUTHORITY = "com.morphoss.jumble";
 	public static final Uri CONTENT_URI_WORDS = Uri.parse("content://"
 			+ AUTHORITY + "/words");
-	public static final Uri CONTENT_URI_SCORES = Uri.parse("content://"
-			+ AUTHORITY + "/scores");
+	public static final Uri CONTENT_URI_CATEGORIES = Uri.parse("content://"
+			+ AUTHORITY + "/categories");
 	public static final String TAG = "JumbleProvider";
 
 	private static final int ALL_WORDS = 1;
 	private static final int SINGLE_WORD = 2;
-	private static final int ALL_SCORES = 3;
-	private static final int SINGLE_SCORE = 4;
+	private static final int ALL_CATEGORIES = 3;
+	private static final int SINGLE_CATEGORY = 4;
+	private static final int ADD_SCORE = 5;
+	private static final int ADD_RATIO = 6;
+	private static final int UNLOCK_CATEGORY = 7;
 
 	private static final UriMatcher uriMatcher;
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		uriMatcher.addURI(AUTHORITY, "words", ALL_WORDS);
-		uriMatcher.addURI(AUTHORITY, "scores", ALL_SCORES);
+		uriMatcher.addURI(AUTHORITY, "categories", ALL_CATEGORIES);
 		uriMatcher.addURI(AUTHORITY, "words/#", SINGLE_WORD);
-		uriMatcher.addURI(AUTHORITY, "scores/#", SINGLE_SCORE);
+		uriMatcher.addURI(AUTHORITY, "categories/#", SINGLE_CATEGORY);
+		uriMatcher.addURI(AUTHORITY, "words/addscore", ADD_SCORE);
+		uriMatcher.addURI(AUTHORITY, "categories/addratio", ADD_RATIO);
+		uriMatcher.addURI(AUTHORITY, "categories/unlockCategory", UNLOCK_CATEGORY);
+		
 	}
 
 	private JumbleDatabaseHelper dbHelper;
@@ -66,12 +73,12 @@ public class JumbleProvider extends ContentProvider {
 		switch (uriMatcher.match(uri)) {
 		case ALL_WORDS:
 			return "vnd.android.cursor.dir/vnd.com.morphoss.xo.jumble.words";
-		case ALL_SCORES:
-			return "vnd.android.cursor.dir/vnd.com.morphoss.xo.jumble.scores";
+		case ALL_CATEGORIES:
+			return "vnd.android.cursor.dir/vnd.com.morphoss.xo.jumble.categories";
 		case SINGLE_WORD:
 			return "vnd.android.cursor.item/vnd.com.morphoss.xo.jumble.words";
-		case SINGLE_SCORE:
-			return "vnd.android.cursor.item/vnd.com.morphoss.xo.jumble.scores";
+		case SINGLE_CATEGORY:
+			return "vnd.android.cursor.item/vnd.com.morphoss.xo.jumble.categories";
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -88,10 +95,10 @@ public class JumbleProvider extends ContentProvider {
 			getContext().getContentResolver().notifyChange(uri, null);
 			return Uri.parse(CONTENT_URI_WORDS + "/" + id);
 
-		case ALL_SCORES:
-			long id2 = db.insert(JumbleScoresTable.TABLE, null, values);
+		case ALL_CATEGORIES:
+			long id2 = db.insert(JumbleCategoryTable.TABLE, null, values);
 			getContext().getContentResolver().notifyChange(uri, null);
-			return Uri.parse(CONTENT_URI_SCORES + "/" + id2);
+			return Uri.parse(CONTENT_URI_CATEGORIES + "/" + id2);
 
 		default:
 
@@ -115,10 +122,10 @@ public class JumbleProvider extends ContentProvider {
 					selectionArgs, null, null, sortOrder);
 			return cursor1;
 
-		case SINGLE_SCORE:
-			queryBuilder.setTables(JumbleScoresTable.TABLE);
+		case SINGLE_CATEGORY:
+			queryBuilder.setTables(JumbleCategoryTable.TABLE);
 			String id2 = uri.getPathSegments().get(1);
-			queryBuilder.appendWhere(JumbleScoresTable._ID + "=" + id2);
+			queryBuilder.appendWhere(JumbleCategoryTable._ID + "=" + id2);
 			Cursor cursor2 = queryBuilder.query(db, projection, selection,
 					selectionArgs, null, null, sortOrder);
 			return cursor2;
@@ -129,8 +136,8 @@ public class JumbleProvider extends ContentProvider {
 					selectionArgs, null, null, sortOrder);
 			return cursor3;
 
-		case ALL_SCORES:
-			queryBuilder.setTables(JumbleScoresTable.TABLE);
+		case ALL_CATEGORIES:
+			queryBuilder.setTables(JumbleCategoryTable.TABLE);
 			Cursor cursor4 = queryBuilder.query(db, projection, selection,
 					selectionArgs, null, null, sortOrder);
 			return cursor4;
@@ -145,7 +152,7 @@ public class JumbleProvider extends ContentProvider {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		int deleteCount = db.delete(JumbleWordsTable.TABLE, selection,
 				selectionArgs);
-		int deleteCount2 = db.delete(JumbleScoresTable.TABLE, selection,
+		int deleteCount2 = db.delete(JumbleCategoryTable.TABLE, selection,
 				selectionArgs);
 		switch (uriMatcher.match(uri)) {
 
@@ -159,23 +166,14 @@ public class JumbleProvider extends ContentProvider {
 			getContext().getContentResolver().notifyChange(uri, null);
 			return deleteCount;
 		case ALL_WORDS:
-			Log.d(TAG, "delete all the words of the database");
+			Log.d(TAG, "delete all the wordsfrom the database");
 			getContext().getContentResolver().notifyChange(uri, null);
 			return deleteCount;
-		case SINGLE_SCORE:
-			String id2 = uri.getPathSegments().get(1);
-			selection = JumbleScoresTable._ID
-					+ "="
-					+ id2
-					+ (!TextUtils.isEmpty(selection) ? " AND (" + selection
-							+ ')' : "");
-			getContext().getContentResolver().notifyChange(uri, null);
-			return deleteCount2;
-		case ALL_SCORES:
-			Log.d(TAG, "delete all the scores of the database");
-			getContext().getContentResolver().notifyChange(uri, null);
-			return deleteCount2;
 
+		case ALL_CATEGORIES:
+			Log.d(TAG, "delete all the unlocked categories from the database");
+			getContext().getContentResolver().notifyChange(uri, null);
+			return deleteCount2;
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -199,17 +197,26 @@ public class JumbleProvider extends ContentProvider {
 					selection, selectionArgs);
 			getContext().getContentResolver().notifyChange(uri, null);
 			return updateCount;
-		case SINGLE_SCORE:
-			String id2 = uri.getPathSegments().get(1);
-			selection = JumbleScoresTable._ID
-					+ "="
-					+ id2
-					+ (!TextUtils.isEmpty(selection) ? " AND (" + selection
-							+ ')' : "");
-			int updateCount2 = db.update(JumbleScoresTable.TABLE, values,
-					selection, selectionArgs);
-			getContext().getContentResolver().notifyChange(uri, null);
-			return updateCount2;
+		case ADD_SCORE:
+			db.execSQL(
+					"UPDATE " + JumbleWordsTable.TABLE + " SET " +
+					JumbleWordsTable.SCORE+"="+JumbleWordsTable.SCORE+"+"+values.getAsInteger(JumbleWordsTable.ADDSCORE)
+					+ " WHERE "+ selection, selectionArgs);
+			return 1;
+		case ADD_RATIO:
+			db.execSQL(
+					"UPDATE " + JumbleCategoryTable.TABLE + " SET " +
+					JumbleCategoryTable.RATIO+"="+values.getAsInteger(JumbleCategoryTable.RATIO)
+					+ " WHERE "+ selection, selectionArgs);
+			return 1;
+		case UNLOCK_CATEGORY:
+			int rowChanged = db.update(JumbleCategoryTable.TABLE, values, selection, selectionArgs);
+			/*db.execSQL(
+					"UPDATE " + JumbleCategoryTable.TABLE + " SET " +
+					JumbleCategoryTable.UNLOCK+"="+values.getAsInteger(JumbleCategoryTable.UNLOCK)
+					+ " WHERE "+ selection, selectionArgs);*/
+			Log.d(TAG, "unlock a category, row changed : "+rowChanged);
+			return rowChanged;
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}

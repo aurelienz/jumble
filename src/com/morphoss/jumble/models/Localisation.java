@@ -66,7 +66,7 @@ public class Localisation implements Parcelable {
 	}
 
 	/**
-	 * This method checks if the word has an other localization than English
+	 * This method checks if the word has an other localization
 	 *
 	 * @return
 	 */
@@ -76,7 +76,6 @@ public class Localisation implements Parcelable {
 
 	/**
 	 * This method checks if the sound of the word has an other localization
-	 * than English
 	 *
 	 * @return
 	 */
@@ -86,7 +85,7 @@ public class Localisation implements Parcelable {
 
 	/**
 	 * This method checks if the difficulty of the word has an other
-	 * localization than English
+	 * localization
 	 *
 	 * @return
 	 */
