@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/sheep_jumping"
+        android:layout_width="396dp"
+        android:layout_height="404dp"
+        android:layout_gravity="top|center"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:src="@drawable/jumping" />
+
+    <ImageView
+        android:id="@+id/star1"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="top|left"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="300dp"
+        android:src="@drawable/star" />
+
+    <ImageView
+        android:id="@+id/star2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="top|left"
+        android:layout_marginLeft="250dp"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/star" />
+
+    <ImageView
+        android:id="@+id/star3"
+        android:layout_width="45dp"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="200dp"
+        android:layout_marginLeft="260dp"
+        android:src="@drawable/star" />
+
+    <ImageView
+        android:id="@+id/star4"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_gravity="top|right"
+        android:layout_marginRight="250dp"
+        android:layout_marginTop="80dp"
+        android:src="@drawable/star" />
+
+    <ImageView
+        android:id="@+id/star5"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="200dp"
+        android:layout_marginRight="130dp"
+        android:src="@drawable/star" />
+
+    <Button
+        android:id="@+id/button_play"
+        android:layout_width="wrap_content"
+        android:layout_height="230dp"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="350dp"
+        android:background="@drawable/move_play"
+        android:onClick="Screen_Play"
+        android:text="@string/text_button_play"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="90sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_gravity="top|right"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/statistics"
+        android:gravity="center"
+        android:onClick="Screen_Results"
+        android:orientation="vertical" />
+
+    <ImageButton
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_gravity="top|right"
+        android:layout_marginRight="140dp"
+        android:layout_marginTop="200dp"
+        android:background="@drawable/rules"
+        android:gravity="center"
+        android:onClick="Screen_Rules"
+        android:orientation="vertical" />
+
+    <ImageButton
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_gravity="top|right"
+        android:layout_marginRight="280dp"
+        android:layout_marginTop="320dp"
+        android:background="@drawable/settings"
+        android:gravity="center"
+        android:onClick="Screen_Settings"
+        android:orientation="vertical" />
+
+    <ImageButton
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="top|left"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/quit"
+        android:gravity="center"
+        android:onClick="Screen_Quit"
+        android:orientation="vertical" />
+
+    <Button
+        android:id="@+id/credits"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/icon_about"
+        android:gravity="center"
+        android:onClick="Screen_Credits"
+        android:orientation="vertical" />
+
+</FrameLayout>
